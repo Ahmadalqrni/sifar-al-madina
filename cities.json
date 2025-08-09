@@ -1,0 +1,248 @@
+[
+  {
+    "name": "المدينة المنورة",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Masjid_Nabawi._Medina%2C_Saudi_Arabia.jpg/800px-Masjid_Nabawi._Medina%2C_Saudi_Arabia.jpg",
+    "desc": "ثاني أقدس مدينة في الإسلام، موطن المسجد النبوي الشريف ومدفن رسول الله ﷺ.",
+    "population": "1.5M",
+    "event": "زيارة المسجد النبوي الشريف والروضة المباركة",
+    "hotels": [
+      {
+        "name": "فندق دار المدينة",
+        "rating": "5 نجوم",
+        "location": "قرب المسجد النبوي الشريف",
+        "price": "2500 ريال/ليلة",
+        "amenities": ["مسبح", "سبا", "مطعم", "واي فاي مجاني", "خدمة نقل للمسجد النبوي", "موقف سيارات"],
+        "contact": "014-1234567",
+        "website": "www.daralmadinah.com"
+      },
+      {
+        "name": "فندق المدينة المنورة هيلتون",
+        "rating": "5 نجوم",
+        "location": "وسط المدينة المنورة",
+        "price": "3000 ريال/ليلة",
+        "amenities": ["مسبح", "سبا", "صالة ألعاب رياضية", "مطعم", "واي فاي مجاني", "خدمة نقل للمسجد النبوي"],
+        "contact": "014-2345678",
+        "website": "www.hilton.com/madinah"
+      },
+      {
+        "name": "فندق المدينة المنورة راديسون بلو",
+        "rating": "4 نجوم",
+        "location": "حي العوالي",
+        "price": "1800 ريال/ليلة",
+        "amenities": ["مسبح", "مطعم", "واي فاي مجاني", "موقف سيارات", "خدمة نقل للمسجد النبوي"],
+        "contact": "014-3456789",
+        "website": "www.radissonblu.com/madinah"
+      },
+      {
+        "name": "فندق المدينة المنورة إنتركونتيننتال",
+        "rating": "5 نجوم",
+        "location": "قرب المسجد النبوي الشريف",
+        "price": "2800 ريال/ليلة",
+        "amenities": ["مسبح", "سبا", "صالة ألعاب رياضية", "مطعم", "واي فاي مجاني", "خدمة نقل للمسجد النبوي"],
+        "contact": "014-4567890",
+        "website": "www.ihg.com/madinah"
+      },
+      {
+        "name": "فندق المدينة المنورة موفنبيك",
+        "rating": "4 نجوم",
+        "location": "حي العوالي",
+        "price": "2000 ريال/ليلة",
+        "amenities": ["مسبح", "مطعم", "واي فاي مجاني", "موقف سيارات", "خدمة نقل للمسجد النبوي"],
+        "contact": "014-5678901",
+        "website": "www.movenpick.com/madinah"
+      }
+    ],
+    "guides": [
+      {
+        "name": "محمد العتيبي",
+        "languages": ["العربية", "الإنجليزية", "الأردية"],
+        "experience": "10 سنوات",
+        "specialties": ["التاريخ الإسلامي", "المعالم الدينية", "المناسك", "المواقع التاريخية"],
+        "contact": "055-1234567",
+        "email": "mohammed@guide.com",
+        "price": "800 ريال/يوم"
+      },
+      {
+        "name": "أحمد السلمي",
+        "languages": ["العربية", "الإنجليزية", "الفرنسية"],
+        "experience": "8 سنوات",
+        "specialties": ["المسجد النبوي الشريف", "مسجد قباء", "جبل أحد", "المواقع التاريخية"],
+        "contact": "055-2345678",
+        "email": "ahmed@guide.com",
+        "price": "700 ريال/يوم"
+      },
+      {
+        "name": "سارة القحطاني",
+        "languages": ["العربية", "الإنجليزية", "الألمانية"],
+        "experience": "6 سنوات",
+        "specialties": ["الجولات الثقافية", "التاريخ الإسلامي", "المعالم الدينية", "التراث"],
+        "contact": "055-3456789",
+        "email": "sarah@guide.com",
+        "price": "600 ريال/يوم"
+      },
+      {
+        "name": "خالد الحربي",
+        "languages": ["العربية", "الإنجليزية", "الأردية", "البنغالية"],
+        "experience": "12 سنة",
+        "specialties": ["المناسك", "المعالم الدينية", "التاريخ الإسلامي", "الجولات الروحانية"],
+        "contact": "055-4567890",
+        "email": "khalid@guide.com",
+        "price": "900 ريال/يوم"
+      }
+    ],
+    "landmarks": [
+      {
+        "name": "المسجد النبوي الشريف",
+        "description": "أحد أقدس المساجد في الإسلام، حيث صلى النبي ﷺ ودفن فيه. يتميز بقبته الخضراء الشهيرة والروضة المباركة.",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Masjid_Nabawi._Medina%2C_Saudi_Arabia.jpg/800px-Masjid_Nabawi._Medina%2C_Saudi_Arabia.jpg",
+        "location": "وسط المدينة المنورة",
+        "type": "ديني"
+      },
+      {
+        "name": "مسجد قباء",
+        "description": "أول مسجد بني في الإسلام، يقع جنوب المدينة المنورة. كان النبي ﷺ يزوره ويصلي فيه.",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Quba_Mosque.jpg/800px-Quba_Mosque.jpg",
+        "location": "جنوب المدينة المنورة",
+        "type": "ديني"
+      },
+      {
+        "name": "جبل أحد",
+        "description": "موقع معركة أحد التاريخية، يقع شمال المدينة المنورة. يتميز بالمناظر الطبيعية الخلابة.",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Mount_Uhud.jpg/800px-Mount_Uhud.jpg",
+        "location": "شمال المدينة المنورة",
+        "type": "تاريخي"
+      },
+      {
+        "name": "مسجد القبلتين",
+        "description": "المسجد الذي صلى فيه النبي ﷺ نحو القبلتين. له أهمية تاريخية كبيرة في الإسلام.",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Masjid_al-Qiblatayn.jpg/800px-Masjid_al-Qiblatayn.jpg",
+        "location": "شمال المدينة المنورة",
+        "type": "ديني"
+      },
+      {
+        "name": "مقبرة البقيع",
+        "description": "مقبرة تاريخية تضم رفات العديد من الصحابة وأهل البيت. لها أهمية دينية وتاريخية كبيرة.",
+        "image": "https://www.visitsaudi.com/content/dam/saudi-tourism/media/madinah-articles/al-baqi-cemetery.jpg",
+        "location": "شرق المسجد النبوي الشريف",
+        "type": "ديني"
+      },
+      {
+        "name": "المسار النبوي",
+        "description": "المسار الذي سلكه النبي ﷺ من المدينة إلى قباء. له أهمية تاريخية وروحانية.",
+        "image": "https://www.visitsaudi.com/content/dam/saudi-tourism/media/madinah-articles/prophet-path.jpg",
+        "location": "من المدينة إلى قباء",
+        "type": "تاريخي"
+      }
+    ],
+    "prayer_times": {
+      "fajr": "04:30",
+      "dhuhr": "12:15",
+      "asr": "15:45",
+      "maghrib": "18:30",
+      "isha": "20:00"
+    },
+    "weather": {
+      "current": "25°C",
+      "description": "مشمس",
+      "humidity": "45%",
+      "wind": "10 km/h"
+    },
+    "transportation": [
+      {
+        "type": "حافلات النقل العام",
+        "description": "شبكة حافلات تغطي جميع أحياء المدينة",
+        "price": "2 ريال"
+      },
+      {
+        "type": "تاكسي",
+        "description": "تاكسي متوفر في جميع أنحاء المدينة",
+        "price": "15-50 ريال"
+      },
+      {
+        "type": "سيارة مع سائق",
+        "description": "خدمة سيارات مع سائق محترف",
+        "price": "200-500 ريال/يوم"
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "مطعم المدينة المنورة",
+        "cuisine": "مأكولات محلية",
+        "rating": "4.5",
+        "price_range": "متوسط",
+        "location": "وسط المدينة"
+      },
+      {
+        "name": "مطعم قباء",
+        "cuisine": "مأكولات عربية",
+        "rating": "4.3",
+        "price_range": "متوسط",
+        "location": "حي قباء"
+      },
+      {
+        "name": "مطعم الروضة",
+        "cuisine": "مأكولات شرقية",
+        "rating": "4.7",
+        "price_range": "فاخر",
+        "location": "قرب المسجد النبوي"
+      }
+    ],
+    "shopping": [
+      {
+        "name": "سوق المدينة المنورة",
+        "description": "سوق تقليدي يبيع المنتجات المحلية والحرف اليدوية",
+        "location": "وسط المدينة"
+      },
+      {
+        "name": "مركز المدينة التجاري",
+        "description": "مركز تسوق حديث يحتوي على محلات ومطاعم",
+        "location": "حي العوالي"
+      },
+      {
+        "name": "سوق العوالي",
+        "description": "سوق شعبي يبيع الملابس والأحذية والمنتجات المحلية",
+        "location": "حي العوالي"
+      }
+    ],
+    "activities": [
+      {
+        "name": "زيارة المسجد النبوي الشريف",
+        "description": "الصلاة في المسجد النبوي وزيارة الروضة المباركة",
+        "duration": "2-3 ساعات",
+        "type": "ديني"
+      },
+      {
+        "name": "جولة في المواقع التاريخية",
+        "description": "زيارة مسجد قباء، جبل أحد، مسجد القبلتين",
+        "duration": "4-5 ساعات",
+        "type": "تاريخي"
+      },
+      {
+        "name": "جولة في المدينة القديمة",
+        "description": "استكشاف الأحياء القديمة والأسواق التقليدية",
+        "duration": "3-4 ساعات",
+        "type": "ثقافي"
+      },
+      {
+        "name": "زيارة مقبرة البقيع",
+        "description": "زيارة المقبرة التاريخية وقراءة الفاتحة",
+        "duration": "1-2 ساعة",
+        "type": "ديني"
+      }
+    ],
+    "tips": [
+      "احرص على زيارة المسجد النبوي الشريف في أوقات الصلاة",
+      "تأكد من ارتداء ملابس محتشمة عند زيارة المساجد",
+      "احمل معك ماء واقراص للصداع في الأيام الحارة",
+      "استخدم الحذاء المريح للمشي في المدينة",
+      "احتفظ بخريطة المدينة معك دائماً",
+      "تأكد من وجود بطارية احتياطية لهاتفك"
+    ],
+    "emergency_contacts": {
+      "police": "014-911",
+      "ambulance": "014-997",
+      "fire": "014-998",
+      "tourist_help": "014-1234567"
+    }
+  }
+] 

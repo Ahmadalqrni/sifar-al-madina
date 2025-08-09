@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جدول رحلتك - المدينة المنورة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --madina-green: #1a5f3a;
+            --madina-gold: #d4af37;
+            --madina-light: #f8f9fa;
+            --madina-dark: #0d2e1a;
+            --madina-accent: #2d7d4a;
+            --madina-text: #2c3e50;
+            --madina-shadow: rgba(26, 95, 58, 0.1);
+        }
+
+        body {
+            font-family: 'Cairo', 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.8;
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation: float1 8s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            animation: float2 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation: float3 10s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-30px) rotate(5deg) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-25px) rotate(-3deg) scale(1.05); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-35px) rotate(8deg) scale(1.15); }
+        }
+
+        .schedule-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .schedule-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .schedule-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .schedule-header h1 {
+            color: var(--madina-gold);
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 900;
+            position: relative;
+            z-index: 2;
+        }
+
+        .schedule-header p {
+            color: white;
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            opacity: 0.95;
+        }
+
+        .schedule-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--madina-gold);
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--madina-dark);
+        }
+
+        .form-control:focus {
+            border-color: var(--madina-gold);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .landmarks-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .landmarks-title {
+            color: var(--madina-gold);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .landmarks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .landmark-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(26, 95, 58, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .landmark-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(26, 95, 58, 0.15);
+        }
+
+        .landmark-card.selected {
+            border-color: var(--madina-gold);
+            background: linear-gradient(135deg, #fff8e1 0%, #fff5d6 100%);
+        }
+
+        .landmark-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .landmark-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--madina-green);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .landmark-desc {
+            color: var(--madina-text);
+            opacity: 0.8;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* Tour Guide Features Section */
+        .tour-guide-section {
+            background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(26, 95, 58, 0.2);
+            margin-bottom: 3rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tour-guide-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .tour-guide-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--madina-gold);
+            position: relative;
+            z-index: 2;
+        }
+
+        .tour-guide-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tour-guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .guide-feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guide-feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .guide-feature-card:hover::before {
+            left: 100%;
+        }
+
+        .guide-feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(26, 95, 58, 0.3);
+        }
+
+        .guide-feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .guide-feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--madina-gold);
+            text-align: center;
+        }
+
+        .guide-feature-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .feature-badge {
+            background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+            color: var(--madina-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .guide-pricing {
+            position: relative;
+            z-index: 2;
+        }
+
+        .guide-pricing h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--madina-gold);
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--madina-gold);
+            transform: scale(1.05);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(26, 95, 58, 0.3);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .pricing-header h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--madina-gold);
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .popular-badge {
+            background: var(--madina-gold);
+            color: var(--madina-dark);
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            position: absolute;
+            top: -10px;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: white;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .pricing-btn {
+            background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+            color: var(--madina-dark);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            width: 100%;
+        }
+
+        .pricing-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .tour-guide-section {
+                padding: 2rem 1.5rem;
+            }
+            
+            .tour-guide-title {
+                font-size: 2rem;
+            }
+            
+            .tour-guide-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+
+        .schedule-preview {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--madina-shadow);
+            margin-top: 3rem;
+        }
+
+        /* Restaurants Recommendations */
+        .restaurants-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed #eee;
+        }
+
+        .restaurants-title {
+            color: var(--madina-green);
+            font-size: 1.6rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .restaurants-subtitle {
+            color: var(--madina-text);
+            opacity: 0.85;
+            margin-bottom: 1.5rem;
+        }
+
+        .restaurants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .restaurant-card {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+        }
+
+        .restaurant-name {
+            color: var(--madina-green);
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            font-size: 1.05rem;
+        }
+
+        .restaurant-meta {
+            font-size: 0.9rem;
+            color: var(--madina-text);
+            opacity: 0.9;
+            margin-bottom: 0.6rem;
+        }
+
+        .restaurant-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.6rem;
+            color: #f59e0b; /* amber */
+            font-weight: 700;
+        }
+
+        .restaurant-rating .score {
+            color: #f59e0b;
+        }
+
+        .restaurant-rating .count {
+            color: var(--madina-text);
+            opacity: 0.75;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .restaurant-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            background: #f4f6f8;
+            color: #2c3e50;
+            border: 1px solid #e6e9ec;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .restaurant-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .map-btn, .call-btn {
+            flex: 1;
+            background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+            color: var(--madina-dark);
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .map-btn:hover, .call-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(212, 175, 55, 0.25);
+        }
+
+        .preview-title {
+            color: var(--madina-green);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .day-schedule {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            transition: all 0.3s ease;
+        }
+
+        .day-schedule:hover {
+            border-color: var(--madina-accent);
+            box-shadow: 0 10px 25px rgba(26, 95, 58, 0.1);
+        }
+
+        .day-header {
+            color: var(--madina-green);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .day-icon {
+            font-size: 1.8rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(26, 95, 58, 0.1);
+        }
+
+        .activity-time {
+            background: linear-gradient(45deg, var(--madina-gold), var(--madina-accent));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            margin-left: 1.5rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .activity-details {
+            flex-grow: 1;
+        }
+
+        .activity-title {
+            color: var(--madina-green);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .activity-description {
+            color: var(--madina-text);
+            font-size: 0.95rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .schedule-actions {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(45deg, var(--madina-accent), var(--madina-green));
+            color: white;
+            box-shadow: 0 8px 25px rgba(45, 125, 74, 0.3);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(45, 125, 74, 0.4);
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            color: var(--madina-green);
+            border: 2px solid var(--madina-green);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--madina-green);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Regions Selection in Form Styles */
+        .regions-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .region-option {
+            position: relative;
+        }
+
+        .region-option input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .region-label {
+            display: block;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .region-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .region-label:hover::before {
+            left: 100%;
+        }
+
+        .region-label:hover {
+            border-color: var(--madina-gold);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+        }
+
+        .region-option input[type="checkbox"]:checked + .region-label {
+            border-color: var(--madina-gold);
+            background: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .region-option input[type="checkbox"]:checked + .region-label::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--madina-gold);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .region-info {
+            position: relative;
+            z-index: 2;
+        }
+
+        .region-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--madina-gold);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .region-desc {
+            font-size: 0.9rem;
+            color: white;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .regions-selection {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .region-label {
+                padding: 1.2rem;
+            }
+            
+            .region-name {
+                font-size: 1.1rem;
+            }
+            
+            .region-desc {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Form Actions Styles */
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .start-schedule-btn {
+            background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+            color: var(--madina-dark);
+            border: none;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+            min-width: 280px;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .start-schedule-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .start-schedule-btn:hover::before {
+            left: 100%;
+        }
+
+        .start-schedule-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+        }
+
+        .start-schedule-btn:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        .start-schedule-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-icon {
+            font-size: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .btn-text {
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .start-schedule-btn:hover .btn-arrow {
+            transform: translateX(-5px);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .schedule-status {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem 2rem;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            font-weight: 600;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+            animation: rotate 2s linear infinite;
+        }
+
+        .status-text {
+            font-size: 1.1rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success state */
+        .schedule-status.success {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+
+        .schedule-status.success .status-icon {
+            animation: none;
+        }
+
+        /* Form validation feedback */
+        .form-feedback {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #ffc107;
+            font-weight: 600;
+            text-align: center;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 768px) {
+            .start-schedule-btn {
+                padding: 1.2rem 2rem;
+                font-size: 1.1rem;
+                min-width: 250px;
+            }
+            
+            .btn-text {
+                font-size: 1.1rem;
+            }
+            
+            .form-actions {
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+            }
+            
+            .schedule-status {
+                padding: 1rem 1.5rem;
+                text-align: center;
+            }
+            
+            .status-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* Dark mode support */
+        body.dark {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #f4f4f4;
+        }
+
+        body.dark .schedule-form,
+        body.dark .landmarks-section,
+        body.dark .schedule-preview {
+            background: #2a2a2a;
+        }
+
+        body.dark .form-control {
+            background: #3a3a3a;
+            border-color: #555;
+            color: #f4f4f4;
+        }
+
+        body.dark .landmark-card {
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark .day-schedule {
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            border-color: #555;
+        }
+
+        body.dark .activity-item {
+            background: #3a3a3a;
+            border-color: #555;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .schedule-container {
+                padding: 1rem;
+            }
+
+            .schedule-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .schedule-form,
+            .landmarks-section,
+            .schedule-preview {
+                padding: 2rem;
+            }
+
+            .landmarks-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .activity-time {
+                margin-left: 0;
+                align-self: flex-start;
+            }
+
+            .schedule-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .schedule-header h1 {
+                font-size: 2rem;
+            }
+
+            .schedule-form,
+            .landmarks-section,
+            .schedule-preview {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="header-logo">
+                <img src="image/icon website.jpg" alt="شعار المدينة المنورة" class="logo-img" />
+            </a>
+            <nav class="header-nav">
+                <a href="index.html" class="header-link" data-i18n="nav.home">الرئيسية</a>
+                <a href="index.html#features" class="header-link" data-i18n="nav.features">المميزات</a>
+                <a href="index.html#prayer" class="header-link" data-i18n="nav.prayer">أوقات الصلاة</a>
+                <div class="header-actions" style="display:flex; gap:0.5rem; align-items:center; margin-inline-start:auto;">
+                  <div class="language-dropdown">
+                      <button id="languageToggle" class="cta-button header-cta" aria-haspopup="true" aria-expanded="false">اللغة</button>
+                      <div id="languageMenu" class="language-menu" role="menu" aria-label="Language menu">
+                        <button type="button" class="language-option" data-lang="ar" role="menuitem">العربية</button>
+                        <button type="button" class="language-option" data-lang="en" role="menuitem">English</button>
+                        <button type="button" class="language-option" data-lang="fr" role="menuitem">Français</button>
+                        <button type="button" class="language-option" data-lang="zh" role="menuitem">中文</button>
+                        <button type="button" class="language-option" data-lang="hi" role="menuitem">हिन्दी</button>
+                        <button type="button" class="language-option" data-lang="id" role="menuitem">Bahasa Indonesia</button>
+                      </div>
+                  </div>
+                  <button id="darkModeToggle" class="cta-button" data-i18n="buttons.darkMode">الوضع الليلي</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="schedule-container">
+        <div class="schedule-header">
+            <h1 data-i18n="schedule.headerTitle">جدول رحلتك إلى المدينة المنورة</h1>
+            <p data-i18n="schedule.headerSubtitle">خطط رحلتك الروحانية إلى المدينة المنورة واكتشف أجمل معالمها التاريخية والدينية</p>
+        </div>
+
+        <div class="schedule-form">
+            <h2 style="color: var(--madina-green); font-size: 2rem; margin-bottom: 2rem; text-align: center;" data-i18n="schedule.formTitle">معلومات الرحلة</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-i18n="schedule.form.arrivalDate.label">تاريخ الوصول</label>
+                    <input type="date" class="form-control" id="arrivalDate" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="schedule.form.departureDate.label">تاريخ المغادرة</label>
+                    <input type="date" class="form-control" id="departureDate" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-i18n="schedule.form.peopleCount.label">عدد الأشخاص</label>
+                    <input type="number" class="form-control" id="peopleCount" min="1" max="10" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="schedule.form.accommodation.label">نوع الإقامة</label>
+                    <select class="form-control" id="accommodationType">
+                        <option value="hotel" data-i18n="schedule.form.accommodation.options.hotel">فندق فاخر</option>
+                        <option value="apartment" data-i18n="schedule.form.accommodation.options.apartment">شقة</option>
+                        <option value="guesthouse" data-i18n="schedule.form.accommodation.options.guesthouse">نُزل</option>
+                        <option value="camping" data-i18n="schedule.form.accommodation.options.camping">خيام (في المواسم)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="schedule.form.budget.label">الميزانية التقريبية (بالريال)</label>
+                <input type="number" class="form-control" id="budget" placeholder="مثال: 5000" data-i18n="schedule.form.budget.placeholder" required>
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="schedule.form.regions.label">المناطق التي تود زيارتها خارج المدينة المنورة</label>
+                <div class="regions-selection">
+                    <div class="region-option" data-region="al-ula">
+                        <input type="checkbox" id="region-al-ula" name="regions" value="al-ula">
+                        <label for="region-al-ula" class="region-label">
+                            <div class="region-info">
+                                <div class="region-name" data-i18n="schedule.form.regions.cards.0.title">🏛️ العلا</div>
+                                <div class="region-desc" data-i18n="schedule.form.regions.cards.0.desc">مدائن صالح والآثار النبطية (350 كم - 4 ساعات)</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="region-option" data-region="yanbu">
+                        <input type="checkbox" id="region-yanbu" name="regions" value="yanbu">
+                        <label for="region-yanbu" class="region-label">
+                            <div class="region-info">
+                                <div class="region-name" data-i18n="schedule.form.regions.cards.1.title">🌊 ينبع</div>
+                                <div class="region-desc" data-i18n="schedule.form.regions.cards.1.desc">لؤلؤة البحر الأحمر (220 كم - 2.5 ساعة)</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="region-option" data-region="badr">
+                        <input type="checkbox" id="region-badr" name="regions" value="badr">
+                        <label for="region-badr" class="region-label">
+                            <div class="region-info">
+                                <div class="region-name" data-i18n="schedule.form.regions.cards.2.title">⚔️ بدر</div>
+                                <div class="region-desc" data-i18n="schedule.form.regions.cards.2.desc">موقع غزوة بدر الكبرى (150 كم - 2 ساعة)</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="region-option" data-region="khaybar">
+                        <input type="checkbox" id="region-khaybar" name="regions" value="khaybar">
+                        <label for="region-khaybar" class="region-label">
+                            <div class="region-info">
+                                <div class="region-name" data-i18n="schedule.form.regions.cards.3.title">🏰 خيبر</div>
+                                <div class="region-desc" data-i18n="schedule.form.regions.cards.3.desc">واحة خيبر التاريخية (170 كم - 2.5 ساعة)</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="schedule.form.interests.label">الاهتمامات الخاصة</label>
+                <textarea class="form-control" id="interests" rows="3" placeholder="اكتب اهتماماتك الخاصة (مثل: التاريخ الإسلامي، العمارة، الطبيعة، إلخ)" data-i18n="schedule.form.interests.placeholder"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="start-schedule-btn" id="startScheduleBtn" onclick="startScheduleGeneration()">
+                    <span class="btn-icon">🗓️</span>
+                    <span class="btn-text" data-i18n="schedule.start">ابدأ جدولة رحلتي</span>
+                    <span class="btn-arrow">←</span>
+                </button>
+                <div class="schedule-status" id="scheduleStatus" style="display: none;">
+                    <div class="status-icon">⏳</div>
+                    <div class="status-text" data-i18n="schedule.generating">جاري إنشاء جدول رحلتك المخصص...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="landmarks-section">
+            <h2 class="landmarks-title" data-i18n="schedule.landmarks.title">اختر المعالم التي تريد زيارتها</h2>
+            <div class="landmarks-grid">
+                <div class="landmark-card" data-landmark="masjid-nabawi">
+                    <div class="landmark-icon">🕌</div>
+                    <div class="landmark-title" data-i18n="schedule.landmarks.cards.masjidNabawi.title">المسجد النبوي الشريف</div>
+                    <div class="landmark-desc" data-i18n="schedule.landmarks.cards.masjidNabawi.desc">أحد أقدس المساجد في الإسلام، حيث صلى النبي ﷺ ودفن فيه</div>
+                </div>
+                <div class="landmark-card" data-landmark="quba-mosque">
+                    <div class="landmark-icon">🕌</div>
+                    <div class="landmark-title" data-i18n="schedule.landmarks.cards.qubaMosque.title">مسجد قباء</div>
+                    <div class="landmark-desc" data-i18n="schedule.landmarks.cards.qubaMosque.desc">أول مسجد بني في الإسلام، يقع جنوب المدينة المنورة</div>
+                </div>
+                <div class="landmark-card" data-landmark="mount-uhud">
+                    <div class="landmark-icon">⛰️</div>
+                    <div class="landmark-title" data-i18n="schedule.landmarks.cards.mountUhud.title">جبل أحد</div>
+                    <div class="landmark-desc" data-i18n="schedule.landmarks.cards.mountUhud.desc">موقع معركة أحد التاريخية، يقع شمال المدينة المنورة</div>
+                </div>
+                <div class="landmark-card" data-landmark="qiblatayn-mosque">
+                    <div class="landmark-icon">🕌</div>
+                    <div class="landmark-title" data-i18n="schedule.landmarks.cards.qiblataynMosque.title">مسجد القبلتين</div>
+                    <div class="landmark-desc" data-i18n="schedule.landmarks.cards.qiblataynMosque.desc">المسجد الذي صلى فيه النبي ﷺ نحو القبلتين</div>
+                </div>
+                <div class="landmark-card" data-landmark="al-baqi">
+                    <div class="landmark-icon">🌿</div>
+                    <div class="landmark-title" data-i18n="schedule.landmarks.cards.alBaqi.title">مقبرة البقيع</div>
+                    <div class="landmark-desc" data-i18n="schedule.landmarks.cards.alBaqi.desc">مقبرة تاريخية تضم رفات العديد من الصحابة</div>
+                </div>
+                <div class="landmark-card" data-landmark="quba-walk">
+                    <div class="landmark-icon">🚶‍♂️</div>
+                    <div class="landmark-title" data-i18n="schedule.landmarks.cards.propheticPath.title">المسار النبوي</div>
+                    <div class="landmark-desc" data-i18n="schedule.landmarks.cards.propheticPath.desc">المسار الذي سلكه النبي ﷺ من المدينة إلى قباء</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tour Guide Features Section -->
+        <div class="tour-guide-section">
+            <h2 class="tour-guide-title" data-i18n="schedule.tourGuide.title">مرشد المدينة المنورة السياحي</h2>
+            <p class="tour-guide-subtitle" data-i18n="schedule.tourGuide.subtitle">اكتشف المدينة المنورة مع مرشد سياحي محترف ومتخصص في التاريخ الإسلامي</p>
+            
+            <div class="tour-guide-grid">
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon">🎓</div>
+                    <h3 data-i18n="schedule.tourGuide.features.expertise.title">خبرة متخصصة</h3>
+                    <p data-i18n="schedule.tourGuide.features.expertise.desc">مرشدون معتمدون من الهيئة العامة للسياحة والتراث الوطني، متخصصون في التاريخ الإسلامي والمدينة المنورة</p>
+                    <div class="feature-badge" data-i18n="schedule.tourGuide.features.expertise.badge">معتمد رسمياً</div>
+                </div>
+                
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon">🗣️</div>
+                    <h3 data-i18n="schedule.tourGuide.features.languages.title">لغات متعددة</h3>
+                    <p data-i18n="schedule.tourGuide.features.languages.desc">مرشدون يتحدثون العربية والإنجليزية والفرنسية والأردية والتركية والماليزية لخدمة جميع الزوار</p>
+                    <div class="feature-badge" data-i18n="schedule.tourGuide.features.languages.badge">6 لغات</div>
+                </div>
+                
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon">📱</div>
+                    <h3 data-i18n="schedule.tourGuide.features.booking.title">حجز إلكتروني</h3>
+                    <p data-i18n="schedule.tourGuide.features.booking.desc">احجز مرشدك السياحي بسهولة عبر التطبيق أو الموقع الإلكتروني مع تأكيد فوري</p>
+                    <div class="feature-badge" data-i18n="schedule.tourGuide.features.booking.badge">حجز فوري</div>
+                </div>
+                
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon">🚗</div>
+                    <h3 data-i18n="schedule.tourGuide.features.transport.title">تنقل مريح</h3>
+                    <p data-i18n="schedule.tourGuide.features.transport.desc">سيارات مكيفة ومريحة مع سائق محترف لنقلك بين جميع المعالم السياحية</p>
+                    <div class="feature-badge" data-i18n="schedule.tourGuide.features.transport.badge">سيارة خاصة</div>
+                </div>
+                
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon">⏰</div>
+                    <h3 data-i18n="schedule.tourGuide.features.flexible.title">جولات مرنة</h3>
+                    <p data-i18n="schedule.tourGuide.features.flexible.desc">جولات صباحية ومسائية وجولات خاصة حسب رغبتك وميزانيتك</p>
+                    <div class="feature-badge" data-i18n="schedule.tourGuide.features.flexible.badge">مرونة كاملة</div>
+                </div>
+                
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon">📸</div>
+                    <h3 data-i18n="schedule.tourGuide.features.photography.title">تصوير احترافي</h3>
+                    <p data-i18n="schedule.tourGuide.features.photography.desc">خدمة تصوير احترافية لتوثيق رحلتك مع صور عالية الجودة</p>
+                    <div class="feature-badge" data-i18n="schedule.tourGuide.features.photography.badge">صور احترافية</div>
+                </div>
+            </div>
+            
+            <div class="guide-pricing">
+                <h3 data-i18n="schedule.tourGuide.pricing.title">أسعار المرشدين السياحيين</h3>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h4 data-i18n="schedule.tourGuide.pricing.packages.halfDay.title">جولة نصف يوم</h4>
+                            <div class="price" data-i18n="schedule.tourGuide.pricing.packages.halfDay.price">150 ريال</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li data-i18n="schedule.tourGuide.pricing.features.guide">✅ مرشد متخصص</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.visit34">✅ زيارة 3-4 معالم</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.explanation">✅ شرح تفصيلي</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.photos">✅ صور تذكارية</li>
+                        </ul>
+                        <button class="pricing-btn" data-i18n="schedule.tourGuide.pricing.bookNow">احجز الآن</button>
+                    </div>
+                    
+                    <div class="pricing-card featured">
+                        <div class="pricing-header">
+                            <h4 data-i18n="schedule.tourGuide.pricing.packages.fullDay.title">جولة يوم كامل</h4>
+                            <div class="price" data-i18n="schedule.tourGuide.pricing.packages.fullDay.price">300 ريال</div>
+                            <div class="popular-badge" data-i18n="schedule.tourGuide.pricing.popular">الأكثر طلباً</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li data-i18n="schedule.tourGuide.pricing.features.guide">✅ مرشد متخصص</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.visit68">✅ زيارة 6-8 معالم</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.lunch">✅ وجبة غداء</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.transport">✅ تنقل مريح</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.professionalPhotos">✅ صور احترافية</li>
+                        </ul>
+                        <button class="pricing-btn" data-i18n="schedule.tourGuide.pricing.bookNow">احجز الآن</button>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h4 data-i18n="schedule.tourGuide.pricing.packages.private.title">جولة خاصة</h4>
+                            <div class="price" data-i18n="schedule.tourGuide.pricing.packages.private.price">500 ريال</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li data-i18n="schedule.tourGuide.pricing.features.privateGuide">✅ مرشد خاص</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.customItinerary">✅ جدول مخصص</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.privateCar">✅ سيارة خاصة</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.premiumMeals">✅ وجبات فاخرة</li>
+                            <li data-i18n="schedule.tourGuide.pricing.features.professionalPhotos">✅ تصوير احترافي</li>
+                        </ul>
+                        <button class="pricing-btn" data-i18n="schedule.tourGuide.pricing.bookNow">احجز الآن</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="schedule-preview">
+            <h2 class="preview-title" data-i18n="schedule.preview.title">جدول رحلتك المقترح</h2>
+            <div id="schedulePreview">
+                <div class="day-schedule">
+                    <div class="day-header">
+                        <span class="day-icon">🌅</span>
+                        <span data-i18n="schedule.preview.day1.header">اليوم الأول - الوصول والاستقرار</span>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">14:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day1.activities.0.title">الوصول إلى المدينة المنورة</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day1.activities.0.desc">الوصول إلى الفندق وتسجيل الدخول والراحة</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">16:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day1.activities.1.title">زيارة المسجد النبوي الشريف</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day1.activities.1.desc">الصلاة في المسجد النبوي وزيارة الروضة المباركة</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">19:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day1.activities.2.title">العشاء في المطاعم المحلية</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day1.activities.2.desc">تذوق المأكولات المحلية التقليدية</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-schedule">
+                    <div class="day-header">
+                        <span class="day-icon">🕌</span>
+                        <span data-i18n="schedule.preview.day2.header">اليوم الثاني - المعالم التاريخية</span>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">08:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day2.activities.0.title">الفطور في الفندق</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day2.activities.0.desc">بداية اليوم بفطور صحي</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">09:30</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day2.activities.1.title">زيارة مسجد قباء</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day2.activities.1.desc">أول مسجد بني في الإسلام</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">11:30</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day2.activities.2.title">جولة في المدينة التاريخية</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day2.activities.2.desc">استكشاف الأحياء القديمة والأسواق التقليدية</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">14:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day2.activities.3.title">الغداء في مطعم محلي</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day2.activities.3.desc">تذوق الأطباق المحلية</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">16:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day2.activities.4.title">زيارة مسجد القبلتين</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day2.activities.4.desc">المسجد الذي صلى فيه النبي ﷺ نحو القبلتين</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">18:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day2.activities.5.title">الصلاة في المسجد النبوي</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day2.activities.5.desc">الصلاة المغرب والعشاء في المسجد النبوي</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-schedule">
+                    <div class="day-header">
+                        <span class="day-icon">⛰️</span>
+                        <span data-i18n="schedule.preview.day3.header">اليوم الثالث - الطبيعة والتاريخ</span>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">08:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day3.activities.0.title">الفطور والاستعداد</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day3.activities.0.desc">تحضير للرحلة اليومية</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">09:30</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day3.activities.1.title">زيارة جبل أحد</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day3.activities.1.desc">موقع معركة أحد التاريخية والاستمتاع بالمناظر الطبيعية</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">12:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day3.activities.2.title">الغداء في المطاعم المحلية</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day3.activities.2.desc">تذوق الأطباق المحلية</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">14:30</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day3.activities.3.title">زيارة مقبرة البقيع</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day3.activities.3.desc">زيارة المقبرة التاريخية</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">16:30</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day3.activities.4.title">المسار النبوي</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day3.activities.4.desc">المشي في المسار الذي سلكه النبي ﷺ</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">18:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title" data-i18n="schedule.preview.day3.activities.5.title">الصلاة في المسجد النبوي</div>
+                            <div class="activity-description" data-i18n="schedule.preview.day3.activities.5.desc">الصلاة المغرب والعشاء في المسجد النبوي</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="schedule-actions">
+            <button class="action-btn primary" onclick="saveSchedule()" data-i18n="schedule.save">💾 حفظ الجدول</button>
+            <button class="action-btn secondary" onclick="printSchedule()" data-i18n="schedule.print">🖨️ طباعة الجدول</button>
+            <a href="index.html" class="action-btn secondary" data-i18n="schedule.backHome">🏠 العودة للرئيسية</a>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Dark mode toggle
+        const darkToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        if (darkToggle) {
+            darkToggle.onclick = function() {
+                body.classList.toggle('dark');
+                if (body.classList.contains('dark')) {
+                    darkToggle.textContent = 'وضع النهار';
+                } else {
+                    darkToggle.textContent = 'الوضع الليلي';
+                }
+            };
+        }
+
+        // Landmark selection
+        document.querySelectorAll('.landmark-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        // Form validation and schedule generation
+        function generateSchedule() {
+            const arrivalDate = document.getElementById('arrivalDate').value;
+            const departureDate = document.getElementById('departureDate').value;
+            const peopleCount = document.getElementById('peopleCount').value;
+            const accommodationType = document.getElementById('accommodationType').value;
+            const budget = document.getElementById('budget').value;
+            const interests = document.getElementById('interests').value;
+
+            // Validate dates
+            if (!arrivalDate || !departureDate) {
+                alert('يرجى تحديد تاريخ الوصول والمغادرة');
+                return;
+            }
+
+            const arrival = new Date(arrivalDate);
+            const departure = new Date(departureDate);
+            const daysDiff = Math.ceil((departure - arrival) / (1000 * 60 * 60 * 24));
+
+            if (daysDiff < 1) {
+                alert('يجب أن تكون مدة الإقامة يوم واحد على الأقل');
+                return;
+            }
+
+            // Update schedule based on selected landmarks
+            updateSchedulePreview();
+        }
+
+        function updateSchedulePreview() {
+            const selectedLandmarks = document.querySelectorAll('.landmark-card.selected');
+            const preview = document.getElementById('schedulePreview');
+            
+            // This is a simplified version - in a real app, you'd generate dynamic content
+            console.log('Selected landmarks:', selectedLandmarks.length);
+        }
+
+        function saveSchedule() {
+            const selectedRegions = document.querySelectorAll('input[name="regions"]:checked');
+            const regionValues = Array.from(selectedRegions).map(input => input.value);
+            
+            const scheduleData = {
+                arrivalDate: document.getElementById('arrivalDate').value,
+                departureDate: document.getElementById('departureDate').value,
+                peopleCount: document.getElementById('peopleCount').value,
+                accommodationType: document.getElementById('accommodationType').value,
+                budget: document.getElementById('budget').value,
+                interests: document.getElementById('interests').value,
+                selectedLandmarks: Array.from(document.querySelectorAll('.landmark-card.selected')).map(card => card.dataset.landmark),
+                selectedRegions: regionValues
+            };
+
+            localStorage.setItem('madinaSchedule', JSON.stringify(scheduleData));
+            
+            let message = 'تم حفظ جدول رحلتك بنجاح!';
+            if (regionValues.length > 0) {
+                const regionNames = Array.from(selectedRegions).map(input => {
+                    const label = document.querySelector(`label[for="${input.id}"]`);
+                    return label.querySelector('.region-name').textContent.replace(/^[🏛️🌊⚔️🏰]\s/, '');
+                });
+                message += '\n\nالمناطق المختارة خارج المدينة المنورة:\n' + regionNames.join(', ');
+            }
+            
+            alert(message);
+        }
+
+        function printSchedule() {
+            window.print();
+        }
+
+        // Auto-generate schedule when form changes
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('change', generateSchedule);
+        });
+
+        // Load saved schedule if exists
+        window.addEventListener('load', function() {
+            const savedSchedule = localStorage.getItem('madinaSchedule');
+            if (savedSchedule) {
+                const schedule = JSON.parse(savedSchedule);
+                document.getElementById('arrivalDate').value = schedule.arrivalDate || '';
+                document.getElementById('departureDate').value = schedule.departureDate || '';
+                document.getElementById('peopleCount').value = schedule.peopleCount || 1;
+                document.getElementById('accommodationType').value = schedule.accommodationType || 'hotel';
+                document.getElementById('budget').value = schedule.budget || '';
+                document.getElementById('interests').value = schedule.interests || '';
+
+                // Restore selected landmarks
+                if (schedule.selectedLandmarks) {
+                    schedule.selectedLandmarks.forEach(landmark => {
+                        const card = document.querySelector(`[data-landmark="${landmark}"]`);
+                        if (card) card.classList.add('selected');
+                    });
+                }
+
+                // Restore selected regions
+                if (schedule.selectedRegions) {
+                    schedule.selectedRegions.forEach(region => {
+                        const checkbox = document.querySelector(`input[value="${region}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+            }
+        });
+
+        // Start Schedule Generation Functionality
+        function startScheduleGeneration() {
+            // Validate required fields
+            if (!validateTripInformation()) {
+                return;
+            }
+
+            // Show loading status
+            const button = document.getElementById('startScheduleBtn');
+            const status = document.getElementById('scheduleStatus');
+            
+            button.disabled = true;
+            button.style.opacity = '0.6';
+            status.style.display = 'flex';
+            status.className = 'schedule-status';
+            
+            // Simulate schedule generation process
+            setTimeout(() => {
+                // Update status to success
+                status.className = 'schedule-status success';
+                status.querySelector('.status-icon').textContent = '✅';
+                status.querySelector('.status-text').textContent = 'تم إنشاء جدول رحلتك بنجاح!';
+                
+                // Generate and display the schedule
+                generatePersonalizedSchedule();
+                
+                // Scroll to schedule preview
+                setTimeout(() => {
+                    document.getElementById('schedulePreview').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 1000);
+                
+                // Hide status after 3 seconds
+                setTimeout(() => {
+                    status.style.display = 'none';
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                }, 3000);
+                
+            }, 2500); // 2.5 second delay to simulate processing
+        }
+
+        function validateTripInformation() {
+            const arrivalDate = document.getElementById('arrivalDate').value;
+            const departureDate = document.getElementById('departureDate').value;
+            const budget = document.getElementById('budget').value;
+            
+            let errors = [];
+            
+            if (!arrivalDate) {
+                errors.push('تاريخ الوصول مطلوب');
+            }
+            
+            if (!departureDate) {
+                errors.push('تاريخ المغادرة مطلوب');
+            }
+            
+            if (!budget) {
+                errors.push('الميزانية التقريبية مطلوبة');
+            }
+            
+            if (arrivalDate && departureDate) {
+                const arrival = new Date(arrivalDate);
+                const departure = new Date(departureDate);
+                const daysDiff = Math.ceil((departure - arrival) / (1000 * 60 * 60 * 24));
+                
+                if (daysDiff < 1) {
+                    errors.push('يجب أن تكون مدة الإقامة يوم واحد على الأقل');
+                }
+            }
+            
+            if (errors.length > 0) {
+                showFormFeedback(errors.join('<br>'));
+                return false;
+            }
+            
+            return true;
+        }
+
+        function showFormFeedback(message) {
+            // Remove existing feedback
+            const existingFeedback = document.querySelector('.form-feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+            
+            // Create new feedback
+            const feedback = document.createElement('div');
+            feedback.className = 'form-feedback';
+            feedback.innerHTML = message;
+            
+            // Insert before form actions
+            const formActions = document.querySelector('.form-actions');
+            formActions.parentNode.insertBefore(feedback, formActions);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                feedback.remove();
+            }, 5000);
+        }
+
+        function generatePersonalizedSchedule() {
+            const arrivalDate = document.getElementById('arrivalDate').value;
+            const departureDate = document.getElementById('departureDate').value;
+            const peopleCount = document.getElementById('peopleCount').value;
+            const selectedRegions = Array.from(document.querySelectorAll('input[name="regions"]:checked'));
+            const selectedLandmarks = Array.from(document.querySelectorAll('.landmark-card.selected'));
+            
+            // Calculate trip duration
+            const arrival = new Date(arrivalDate);
+            const departure = new Date(departureDate);
+            const daysDiff = Math.ceil((departure - arrival) / (1000 * 60 * 60 * 24));
+            
+            // Get region names
+            const regionNames = selectedRegions.map(input => {
+                const label = document.querySelector(`label[for="${input.id}"]`);
+                return label.querySelector('.region-name').textContent.replace(/^[🏛️🌊⚔️🏰]\s/, '');
+            });
+            
+            // Update schedule preview with personalized content
+            updateSchedulePreviewWithPersonalization(daysDiff, regionNames, selectedLandmarks.length);
+            
+            // Save the generated schedule
+            saveSchedule();
+        }
+
+        function updateSchedulePreviewWithPersonalization(days, regions, landmarksCount) {
+            const schedulePreview = document.getElementById('schedulePreview');
+            let scheduleHTML = '';
+            
+            // Generate schedule based on trip duration and selections
+            for (let day = 1; day <= Math.min(days, 5); day++) {
+                let dayActivities = generateDayActivities(day, regions, landmarksCount, days);
+                
+                scheduleHTML += `
+                    <div class="day-schedule">
+                        <div class="day-header">
+                            <span class="day-icon">${getDayIcon(day)}</span>
+                            <span>اليوم ${day} - ${getDayTitle(day, regions)}</span>
+                        </div>
+                        ${dayActivities}
+                    </div>
+                `;
+            }
+
+            // Append famous restaurants in Madinah
+            scheduleHTML += generateRestaurantsBlock();
+            
+            schedulePreview.innerHTML = scheduleHTML;
+        }
+
+        function generateRestaurantsBlock() {
+            const restaurants = getMadinaRestaurants()
+              .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0) || (b.reviews ?? 0) - (a.reviews ?? 0));
+            const cards = restaurants.map(r => `
+                <div class="restaurant-card">
+                    <div class="restaurant-name">${r.name}</div>
+                    <div class="restaurant-rating">
+                        <span class="stars">⭐</span>
+                        <span class="score">${(r.rating ?? 0).toFixed(1)}</span>
+                        <span class="count">(${formatCount(r.reviews)} تقييم)</span>
+                    </div>
+                    <div class="restaurant-meta">${r.cuisine} • ${r.area} • ${r.price}</div>
+                    <div class="restaurant-tags">
+                        ${r.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                    </div>
+                    <div class="restaurant-actions">
+                        <a class="map-btn" href="${r.map}" target="_blank" rel="noopener">فتح الخريطة</a>
+                        ${r.phone ? `<a class="call-btn" href="tel:${r.phone}">اتصال</a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="restaurants-section">
+                    <div class="restaurants-title">🍽️ أشهر المطاعم في المدينة المنورة</div>
+                    <div class="restaurants-subtitle">خيارات موصى بها بالقرب من الحرم والمناطق الحيوية</div>
+                    <div class="restaurants-grid">
+                        ${cards}
+                    </div>
+                </div>
+            `;
+        }
+
+        function getMadinaRestaurants() {
+            return [
+                {
+                    name: 'البيك - المنطقة المركزية',
+                    cuisine: 'سعودي • وجبات سريعة',
+                    area: 'قرب الحرم النبوي',
+                    price: 'رياحي',
+                    tags: ['دجاج مقلي', 'سريع', 'عائلي'],
+                    map: 'https://www.google.com/maps/search/?api=1&query=Al+Baik+Medina',
+                    rating: 4.6,
+                    reviews: 32000
+                },
+                {
+                    name: 'الطازج - المنطقة المركزية',
+                    cuisine: 'سعودي • مشويات ودجاج',
+                    area: 'قرب الحرم النبوي',
+                    price: 'متوسط',
+                    tags: ['دجاج مشوي', 'قيمة ممتازة', 'عائلي'],
+                    map: 'https://www.google.com/maps/search/?api=1&query=Al+Tazaj+Medina',
+                    rating: 4.3,
+                    reviews: 8500
+                },
+                {
+                    name: 'Arabesque Restaurant - فندق شذا',
+                    cuisine: 'بوفيه عربي ودولي',
+                    area: 'بجوار المسجد النبوي',
+                    price: 'مرتفع',
+                    tags: ['بوفيه', 'مناسب للمجموعات', 'إطلالة'],
+                    map: 'https://www.google.com/maps/search/?api=1&query=Arabesque+Shaza+Madinah',
+                    rating: 4.5,
+                    reviews: 2100
+                },
+                {
+                    name: 'التكية',
+                    cuisine: 'حجازي • أكلات شعبية',
+                    area: 'المنطقة المركزية',
+                    price: 'متوسط',
+                    tags: ['مضغوط', 'مندي', 'تجربة محلية'],
+                    map: 'https://www.google.com/maps/search/?api=1&query=Al+Takkiah+Madinah',
+                    rating: 4.4,
+                    reviews: 5700
+                },
+                {
+                    name: 'نور خان',
+                    cuisine: 'باكستاني • أفغاني',
+                    area: 'قريب من المنطقة المركزية',
+                    price: 'اقتصادي',
+                    tags: ['مشويات', 'أرز', 'حار'],
+                    map: 'https://www.google.com/maps/search/?api=1&query=Noor+Khan+Restaurant+Madinah',
+                    rating: 4.2,
+                    reviews: 2600
+                },
+                {
+                    name: 'مطعم يوزو سوشي',
+                    cuisine: 'آسيوي • سوشي',
+                    area: 'حي قربان',
+                    price: 'مرتفع',
+                    tags: ['سوشي', 'حديث', 'عائلي'],
+                    map: 'https://www.google.com/maps/search/?api=1&query=Yuzu+Sushi+Madinah',
+                    rating: 4.4,
+                    reviews: 980
+                }
+            ];
+        }
+
+        function formatCount(n) {
+            if (!n && n !== 0) return '0';
+            if (n >= 1000000) return (n/1000000).toFixed(1).replace(/\.0$/,'') + 'م';
+            if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'k';
+            return n.toString();
+        }
+
+        function generateDayActivities(day, regions, landmarksCount, totalDays) {
+            let activities = '';
+            
+            if (day === 1) {
+                // First day - arrival and settling
+                activities = `
+                    <div class="activity-item">
+                        <div class="activity-time">14:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title">الوصول إلى المدينة المنورة</div>
+                            <div class="activity-description">الوصول إلى الفندق وتسجيل الدخول والراحة</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">16:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title">زيارة المسجد النبوي الشريف</div>
+                            <div class="activity-description">الصلاة في المسجد النبوي وزيارة الروضة المباركة</div>
+                        </div>
+                    </div>
+                `;
+            } else if (day === 2) {
+                // Second day - main landmarks
+                activities = `
+                    <div class="activity-item">
+                        <div class="activity-time">09:00</div>
+                        <div class="activity-details">
+                            <div class="activity-title">زيارة مسجد قباء</div>
+                            <div class="activity-description">أول مسجد بني في الإسلام</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">11:30</div>
+                        <div class="activity-details">
+                            <div class="activity-title">جولة في المدينة التاريخية</div>
+                            <div class="activity-description">استكشاف الأحياء القديمة والأسواق التقليدية</div>
+                        </div>
+                    </div>
+                `;
+            } else if (day >= 3 && regions.length > 0) {
+                // Additional days - external regions
+                const regionIndex = day - 3;
+                if (regionIndex < regions.length) {
+                    const region = regions[regionIndex];
+                    activities = `
+                        <div class="activity-item">
+                            <div class="activity-time">08:00</div>
+                            <div class="activity-details">
+                                <div class="activity-title">رحلة إلى ${region}</div>
+                                <div class="activity-description">استكشاف معالم ${region} والمواقع التاريخية</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">18:00</div>
+                            <div class="activity-details">
+                                <div class="activity-title">العودة إلى المدينة المنورة</div>
+                                <div class="activity-description">العودة والراحة في الفندق</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            return activities;
+        }
+
+        function getDayIcon(day) {
+            const icons = ['🌅', '🕌', '🏛️', '🌊', '⚔️', '🏰'];
+            return icons[day - 1] || '📅';
+        }
+
+        function getDayTitle(day, regions) {
+            if (day === 1) return 'الوصول والاستقرار';
+            if (day === 2) return 'المعالم الرئيسية';
+            if (day >= 3 && regions.length > 0) {
+                const regionIndex = day - 3;
+                if (regionIndex < regions.length) {
+                    return `رحلة ${regions[regionIndex]}`;
+                }
+            }
+            return `اليوم ${day}`;
+        }
+
+        // Tour Guide Booking Functionality
+        function bookTourGuide(packageName, price) {
+            // Show booking confirmation
+            const message = `تم حجز ${packageName} بنجاح!
+            
+تفاصيل الحجز:
+- الباقة: ${packageName}
+- السعر: ${price} ريال
+- المدة: حسب الباقة المختارة
+
+سنقوم بالتواصل معك خلال 24 ساعة لتأكيد التفاصيل والمواعيد.`;
+
+            alert(message);
+            
+            // In a real application, you would:
+            // 1. Send data to server
+            // 2. Show a proper modal
+            // 3. Send confirmation email
+            // 4. Integrate with payment gateway
+        }
+
+        // Add click event listeners to tour guide booking buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const pricingButtons = document.querySelectorAll('.pricing-btn');
+            pricingButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pricingCard = this.closest('.pricing-card');
+                    const packageName = pricingCard.querySelector('h4').textContent;
+                    const price = pricingCard.querySelector('.price').textContent;
+                    bookTourGuide(packageName, price);
+                });
+            });
+        });
+
+        // Regions Selection in Form Functionality
+        function updateScheduleWithRegions() {
+            const selectedRegions = document.querySelectorAll('input[name="regions"]:checked');
+            const regionValues = Array.from(selectedRegions).map(input => input.value);
+            const regionNames = Array.from(selectedRegions).map(input => {
+                const label = document.querySelector(`label[for="${input.id}"]`);
+                return label.querySelector('.region-name').textContent.replace(/^[🏛️🌊⚔️🏰]\s/, '');
+            });
+            
+            if (regionNames.length > 0) {
+                console.log('المناطق المختارة:', regionNames);
+                // في التطبيق الحقيقي، سيتم تحديث الجدول ديناميكياً
+                // updateSchedulePreview();
+            }
+            
+            // Save selected regions to localStorage
+            const scheduleData = JSON.parse(localStorage.getItem('madinaSchedule') || '{}');
+            scheduleData.selectedRegions = regionValues;
+            localStorage.setItem('madinaSchedule', JSON.stringify(scheduleData));
+        }
+
+        // Add change event listeners to region checkboxes
+        document.addEventListener('DOMContentLoaded', function() {
+            const regionCheckboxes = document.querySelectorAll('input[name="regions"]');
+            regionCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateScheduleWithRegions();
+                    
+                    const regionName = this.closest('.region-option').querySelector('.region-name').textContent.replace(/^[🏛️🌊⚔️🏰]\s/, '');
+                    if (this.checked) {
+                        console.log(`تم اختيار ${regionName}`);
+                    } else {
+                        console.log(`تم إلغاء اختيار ${regionName}`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

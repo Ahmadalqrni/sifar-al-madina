@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المدينة - سفار</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Cairo:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --madina-green: #1a5f3a;
+            --madina-gold: #d4af37;
+            --madina-light: #f8f9fa;
+            --madina-dark: #0d2e1a;
+            --madina-accent: #2d7d4a;
+            --madina-text: #2c3e50;
+            --madina-shadow: rgba(26, 95, 58, 0.1);
+        }
+
+        body {
+            font-family: 'Cairo', 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.8;
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation: float1 8s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            animation: float2 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation: float3 10s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-30px) rotate(5deg) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-25px) rotate(-3deg) scale(1.05); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-35px) rotate(8deg) scale(1.15); }
+        }
+
+        .city-details-page {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .city-details-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .city-full-details {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--madina-gold);
+            padding: 2rem;
+        }
+
+        .city-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .city-hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--madina-gold);
+            margin-bottom: 1rem;
+        }
+
+        .city-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .city-image {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .city-sections {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .city-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .city-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--madina-gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .hotels-grid, .guides-grid, .landmarks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hotel-card, .guide-card, .landmark-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .hotel-card:hover, .guide-card:hover, .landmark-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(26, 95, 58, 0.3);
+        }
+
+        .hotel-card h3, .guide-card h3, .landmark-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--madina-gold);
+            margin-bottom: 1rem;
+        }
+
+        .hotel-card p, .guide-card p, .landmark-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .landmark-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .city-details-page {
+                padding: 1rem;
+            }
+            
+            .city-full-details {
+                padding: 2rem;
+            }
+            
+            .city-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hotels-grid, .guides-grid, .landmarks-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Elements -->
+    <div class="floating-elements">
+        <div class="floating-element">🕌</div>
+        <div class="floating-element">🌿</div>
+        <div class="floating-element">⭐</div>
+    </div>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="header-logo">
+                <img src="image/icon website.jpg" alt="شعار سفار" class="logo-img" />
+            </a>
+            <nav class="header-nav">
+                <a href="index.html" class="header-link" data-i18n="nav.home">الرئيسية</a>
+            </nav>
+            <div class="header-actions">
+                <div class="language-dropdown">
+                    <button id="languageToggle" class="cta-button header-cta" aria-haspopup="true" aria-expanded="false">اللغة</button>
+                    <div id="languageMenu" class="language-menu" role="menu" aria-label="Language menu">
+                      <button type="button" class="language-option" data-lang="ar" role="menuitem">العربية</button>
+                      <button type="button" class="language-option" data-lang="en" role="menuitem">English</button>
+                      <button type="button" class="language-option" data-lang="fr" role="menuitem">Français</button>
+                      <button type="button" class="language-option" data-lang="zh" role="menuitem">中文</button>
+                      <button type="button" class="language-option" data-lang="hi" role="menuitem">हिन्दी</button>
+                      <button type="button" class="language-option" data-lang="id" role="menuitem">Bahasa Indonesia</button>
+                    </div>
+                </div>
+                <button id="darkModeToggle" class="cta-button" data-i18n="buttons.darkMode">الوضع الليلي</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="city-details-page">
+        <div class="city-details-container">
+            <div id="cityFullDetails" class="city-full-details">
+                <!-- Content will be loaded dynamically -->
+                <div class="loading-spinner">جاري التحميل...</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const cityName = urlParams.get('city');
+
+        function loadCityDetails() {
+            const container = document.getElementById('cityFullDetails');
+            if (!cityName || !container) return;
+
+            const hotels = hotelsData[cityName] || [];
+            const guides = guidesData[cityName] || [];
+            const tourism = tourismTypes[cityName] || { types: [], description: "معلومات السياحة غير متوفرة." };
+            
+            // Map Arabic city names to directory names and their specific images
+            const cityData = {
+                "جدة": {
+                    dir: "jeddah",
+                    heroImage: "pexels-irfan-rahat-164426592-12694176.jpg",
+                    landmarks: [
+                        {
+                            url: "images/landmarks/Jeddah/نافورة جدة.jpg",
+                            caption: "نافورة جدة"
+                        },
+                        {
+                            url: "images/landmarks/Jeddah/جدة التاريخية.jpg",
+                            caption: "جدة التاريخية"
+                        },
+                        {
+                            url: "images/landmarks/Jeddah/كورنيش جدة.jpg",
+                            caption: "كورنيش جدة"
+                        },
+                        {
+                            url: "images/landmarks/Jeddah/برج جدة.jpg",
+                            caption: "برج جدة"
+                        }
+                    ]
+                },
+                "الرياض": {
+                    dir: "Riyadh",
+                    heroImage: "Riyadh.jpg",
+                    landmarks: [
+                        {
+                            url: "https://images.unsplash.com/photo-1586724237569-f3d0c1dee8a6",
+                            caption: "برج المملكة",
+                            search: "Kingdom Centre Tower Riyadh"
+                        },
+                        {
+                            url: "https://images.unsplash.com/photo-1586724237571-bf7c0b235c32",
+                            caption: "مركز الملك عبدالله المالي",
+                            search: "King Abdullah Financial District KAFD"
+                        },
+                        {
+                            url: "https://images.unsplash.com/photo-1586724237573-9e1c5bc93b7f",
+                            caption: "الدرعية التاريخية",
+                            search: "Diriyah Historical District"
+                        },
+                        {
+                            url: "https://images.unsplash.com/photo-1586724237575-02d1b8401d6c",
+                            caption: "المكعب - نيوم",
+                            search: "Mukaab NEOM"
+                        }
+                    ]
+                },
+                "مكة المكرمة": {
+                    dir: "mecca",
+                    heroImage: "mecca.jpg",
+                    landmarks: [
+                        {
+                            url: "https://i.postimg.cc/L5QBc8Yg/grand-mosque.jpg",
+                            caption: "المسجد الحرام"
+                        },
+                        {
+                            url: "https://i.postimg.cc/RVNyH2Zk/clock-tower.jpg",
+                            caption: "برج ساعة مكة"
+                        },
+                        {
+                            url: "https://i.postimg.cc/3wXQZ9Yh/jabal-nour.jpg",
+                            caption: "جبل النور"
+                        },
+                        {
+                            url: "https://i.postimg.cc/8PmKjLZn/mashair-metro.jpg",
+                            caption: "قطار المشاعر"
+                        }
+                    ]
+                },
+                "المدينة المنورة": {
+                    dir: "madinah",
+                    heroImage: "madinah.jpg",
+                    landmarks: [
+                        {
+                            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Masjid_Nabawi._Medina%2C_Saudi_Arabia.jpg/800px-Masjid_Nabawi._Medina%2C_Saudi_Arabia.jpg",
+                            caption: "المسجد النبوي"
+                        },
+                        {
+                            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Quba_Mosque.jpg/800px-Quba_Mosque.jpg",
+                            caption: "مسجد قباء"
+                        },
+                        {
+                            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Mount_Uhud.jpg/800px-Mount_Uhud.jpg",
+                            caption: "جبل أحد"
+                        },
+                        {
+                            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Masjid_al-Qiblatayn.jpg/800px-Masjid_al-Qiblatayn.jpg",
+                            caption: "مسجد القبلتين"
+                        }
+                    ]
+                },
+                "الطائف": {
+                    dir: "taif",
+                    heroImage: "taif.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/taif/Taif_Banner.jpg",
+                            caption: "جبل الهدا"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/taif/Al%20Shafa.jpg",
+                            caption: "الشفا"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/taif/Taif%20Rose.jpg",
+                            caption: "مزارع الورد الطائفي"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/taif/Rudaf%20Park.jpg",
+                            caption: "منتزه الردف"
+                        }
+                    ]
+                },
+                "الدمام": {
+                    dir: "dammam",
+                    heroImage: "dammam.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/dammam/Dammam_Corniche.jpg",
+                            caption: "كورنيش الدمام"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/dammam/King_Abdulaziz_Center.jpg",
+                            caption: "مركز الملك عبدالعزيز الثقافي العالمي - إثراء"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/dammam/Marjan_Island.jpg",
+                            caption: "جزيرة المرجان"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/dammam/Dammam_Sea_Front.jpg",
+                            caption: "واجهة الدمام البحرية"
+                        }
+                    ]
+                },
+                "أبها": {
+                    dir: "abha",
+                    heroImage: "abha.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/abha/Abha_Palace.jpg",
+                            caption: "قصر أبها"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/abha/Al_Souda_Mountains.jpg",
+                            caption: "جبال السودة"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/abha/Rijal_Almaa.jpg",
+                            caption: "قرية رجال ألمع"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/abha/Abha_Cable_Car.jpg",
+                            caption: "تلفريك أبها"
+                        }
+                    ]
+                },
+                "العلا": {
+                    dir: "al ula",
+                    heroImage: "al-ula.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/alula/Hegra.jpg",
+                            caption: "مدائن صالح - الحجر"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/alula/Elephant_Rock.jpg",
+                            caption: "جبل الفيل"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/alula/Old_Town.jpg",
+                            caption: "البلدة القديمة"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/alula/Maraya_Concert_Hall.jpg",
+                            caption: "قاعة مرايا"
+                        }
+                    ]
+                },
+                "تبوك": {
+                    dir: "tabuk",
+                    heroImage: "tabuk.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/tabuk/Neom_Beach.jpg",
+                            caption: "شواطئ نيوم"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/tabuk/Tabuk_Castle.jpg",
+                            caption: "قلعة تبوك"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/tabuk/Tayeb_Al_Ism.jpg",
+                            caption: "طيب الاسم"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/tabuk/Wadi_Al_Disah.jpg",
+                            caption: "وادي الديسة"
+                        }
+                    ]
+                },
+                "الخبر": {
+                    dir: "al khobar",
+                    heroImage: "khobar.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/alkhobar/Khobar_Corniche.jpg",
+                            caption: "كورنيش الخبر"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/alkhobar/Khobar_Water_Tower.jpg",
+                            caption: "برج المياه"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/alkhobar/Science_Tech_Center.jpg",
+                            caption: "مركز العلوم والتقنية"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/alkhobar/Ajdan_Walk.jpg",
+                            caption: "ممشى عجدان"
+                        }
+                    ]
+                },
+                "ينبع": {
+                    dir: "yanbu",
+                    heroImage: "yanbu.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/yanbu/Yanbu_Lake.jpg",
+                            caption: "بحيرة ينبع"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/yanbu/Historical_Area.jpg",
+                            caption: "ينبع البلد"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/yanbu/Royal_Commission.jpg",
+                            caption: "الهيئة الملكية"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/yanbu/Yanbu_Waterfront.jpg",
+                            caption: "واجهة ينبع البحرية"
+                        }
+                    ]
+                },
+                "حائل": {
+                    dir: "hail",
+                    heroImage: "hail.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/hail/Jubbah_Rock_Art.jpg",
+                            caption: "نقوش جبة الصخرية"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/hail/Airif_Castle.jpg",
+                            caption: "قلعة عيرف"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/hail/Hail_Heritage_Village.jpg",
+                            caption: "قرية حائل التراثية"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/hail/Al_Qishlah_Palace.jpg",
+                            caption: "قصر القشلة"
+                        }
+                    ]
+                },
+                "جازان": {
+                    dir: "jazan",
+                    heroImage: "jazan.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/jazan/Farasan_Islands.jpg",
+                            caption: "جزر فرسان"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/jazan/Fifa_Mountains.jpg",
+                            caption: "جبال فيفا"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/jazan/Jazan_Waterfront.jpg",
+                            caption: "واجهة جازان البحرية"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/jazan/Traditional_Village.jpg",
+                            caption: "القرية التراثية"
+                        }
+                    ]
+                },
+                "نجران": {
+                    dir: "najran",
+                    heroImage: "najran.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/najran/Al_Aan_Palace.jpg",
+                            caption: "قصر العان"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/najran/Najran_Valley_Dam.jpg",
+                            caption: "سد وادي نجران"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/najran/Abu_Hamdan_Village.jpg",
+                            caption: "قرية أبو حمدان"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/najran/Historical_Najran.jpg",
+                            caption: "نجران التاريخية"
+                        }
+                    ]
+                },
+                "عرعر": {
+                    dir: "arar",
+                    heroImage: "arar.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.spa.gov.sa/galupload/normal/1442/2161442.jpg",
+                            caption: "حديقة الملك فهد"
+                        },
+                        {
+                            url: "https://www.spa.gov.sa/galupload/normal/1442/2171442.jpg",
+                            caption: "متنزه الأمير نواف"
+                        },
+                        {
+                            url: "https://aawsat.com/sites/default/files/styles/article_img_top/public/2019/10/13/191013.jpg",
+                            caption: "مركز عرعر الحضاري"
+                        },
+                        {
+                            url: "https://www.spa.gov.sa/galupload/normal/1442/2181442.jpg",
+                            caption: "ميدان الفروسية"
+                        }
+                    ]
+                },
+                "الباحة": {
+                    dir: "baha",
+                    heroImage: "baha.jpg",
+                    landmarks: [
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/albaha/Raghadan_Forest.jpg",
+                            caption: "غابة رغدان"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/albaha/Dhee_Ain_Village.jpg",
+                            caption: "قرية ذي عين"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/albaha/Al_Baha_Forest.jpg",
+                            caption: "غابات الباحة"
+                        },
+                        {
+                            url: "https://www.visitsaudi.com/content/dam/saudi-tourism/media/destinations/albaha/Marble_Village.jpg",
+                            caption: "قرية المرمر"
+                        }
+                    ]
+                }
+            };
+            
+            const currentCity = cityData[cityName] || { 
+                dir: 'default', 
+                heroImage: 'cleaned_page_perfect.png',
+                landmarks: []
+            };
+            
+            // Add better error handling with dynamic placeholders and loading state
+            const style = document.createElement('style');
+            style.textContent = '.gallery-grid {' +
+                'display: grid;' +
+                'grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));' +
+                'gap: 20px;' +
+                'padding: 20px;' +
+            '}' +
+            '.gallery-item {' +
+                'position: relative;' +
+                'border-radius: 10px;' +
+                'overflow: hidden;' +
+                'background: #f8f8f8;' +
+                'aspect-ratio: 4/3;' +
+                'box-shadow: 0 4px 8px rgba(0,0,0,0.1);' +
+            '}' +
+            '.gallery-img {' +
+                'width: 100%;' +
+                'height: 100%;' +
+                'object-fit: cover;' +
+                'transition: transform 0.3s ease;' +
+            '}' +
+            '.gallery-img:hover {' +
+                'transform: scale(1.05);' +
+            '}' +
+            '.gallery-caption {' +
+                'position: absolute;' +
+                'bottom: 0;' +
+                'left: 0;' +
+                'right: 0;' +
+                'background: rgba(0,0,0,0.7);' +
+                'color: white;' +
+                'padding: 12px 15px;' +
+                'text-align: center;' +
+                'font-size: 16px;' +
+                'backdrop-filter: blur(5px);' +
+            '}' +
+            '.hero-section {' +
+                'position: relative;' +
+                'min-height: 60vh;' +
+                'background-size: cover;' +
+                'background-position: center;' +
+                'background-repeat: no-repeat;' +
+                'display: flex;' +
+                'align-items: center;' +
+                'justify-content: center;' +
+                'padding: 40px 20px;' +
+                'margin-bottom: 30px;' +
+                'overflow: hidden;' +
+            '}' +
+            '.hero-content {' +
+                'position: relative;' +
+                'z-index: 2;' +
+                'text-align: center;' +
+                'max-width: 1200px;' +
+                'width: 100%;' +
+                'margin: 0 auto;' +
+                'padding: 20px;' +
+                'background: rgba(0,0,0,0.5);' +
+                'backdrop-filter: blur(10px);' +
+                'border-radius: 15px;' +
+                'box-shadow: 0 4px 30px rgba(0,0,0,0.1);' +
+            '}' +
+            '.city-title {' +
+                'font-size: 3em;' +
+                'color: #fff;' +
+                'margin-bottom: 20px;' +
+                'text-shadow: 2px 2px 4px rgba(0,0,0,0.3);' +
+            '}' +
+            '.city-quick-info {' +
+                'display: flex;' +
+                'flex-wrap: wrap;' +
+                'justify-content: center;' +
+                'gap: 20px;' +
+                'margin-top: 20px;' +
+            '}' +
+            '.weather-container {' +
+                'background: rgba(255,255,255,0.1);' +
+                'padding: 15px;' +
+                'border-radius: 10px;' +
+                'backdrop-filter: blur(5px);' +
+                'width: 100%;' +
+                'max-width: 300px;' +
+            '}' +
+            '.weather-info {' +
+                'display: flex;' +
+                'justify-content: center;' +
+                'align-items: center;' +
+                'color: #fff;' +
+            '}' +
+            '.weather-data {' +
+                'display: flex;' +
+                'align-items: center;' +
+                'gap: 10px;' +
+            '}' +
+            '.weather-data img {' +
+                'width: 50px;' +
+                'height: 50px;' +
+            '}' +
+            '.weather-details {' +
+                'text-align: right;' +
+            '}' +
+            '.weather-details .temp {' +
+                'font-size: 1.5em;' +
+                'font-weight: bold;' +
+            '}' +
+            '.quick-stats {' +
+                'display: flex;' +
+                'flex-wrap: wrap;' +
+                'gap: 15px;' +
+                'justify-content: center;' +
+            '}' +
+            '.stat-item {' +
+                'background: rgba(255,255,255,0.1);' +
+                'padding: 15px 25px;' +
+                'border-radius: 10px;' +
+                'backdrop-filter: blur(5px);' +
+                'display: flex;' +
+                'flex-direction: column;' +
+                'align-items: center;' +
+                'min-width: 120px;' +
+            '}' +
+            '.stat-icon {' +
+                'font-size: 1.5em;' +
+                'margin-bottom: 5px;' +
+            '}' +
+            '.stat-value {' +
+                'font-size: 1.2em;' +
+                'font-weight: bold;' +
+                'color: #fff;' +
+            '}' +
+            '.stat-label {' +
+                'color: #fff;' +
+                'font-size: 0.9em;' +
+            '}' +
+            '@media (max-width: 768px) {' +
+                '.hero-section {' +
+                    'min-height: 40vh;' +
+                    'padding: 20px 10px;' +
+                '}' +
+                '.city-title {' +
+                    'font-size: 2em;' +
+                '}' +
+                '.hero-content {' +
+                    'padding: 15px;' +
+                '}' +
+                '.weather-container {' +
+                    'max-width: 100%;' +
+                '}' +
+                '.stat-item {' +
+                    'min-width: calc(50% - 15px);' +
+                    'padding: 10px 15px;' +
+                '}' +
+                '.gallery-grid {' +
+                    'grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));' +
+                    'gap: 15px;' +
+                    'padding: 15px;' +
+                '}' +
+                '.gallery-caption {' +
+                    'padding: 8px 12px;' +
+                    'font-size: 14px;' +
+                '}' +
+            '}' +
+            '@media (max-width: 480px) {' +
+                '.hero-section {' +
+                    'min-height: 30vh;' +
+                '}' +
+                '.city-title {' +
+                    'font-size: 1.8em;' +
+                    'margin-bottom: 15px;' +
+                '}' +
+                '.stat-item {' +
+                    'min-width: calc(100% - 15px);' +
+                    'padding: 10px;' +
+                '}' +
+                '.gallery-grid {' +
+                    'grid-template-columns: 1fr;' +
+                    'gap: 12px;' +
+                    'padding: 12px;' +
+                '}' +
+                '.weather-data .temp {' +
+                    'font-size: 1.2em;' +
+                '}' +
+                '.weather-data img {' +
+                    'width: 40px;' +
+                    'height: 40px;' +
+                '}' +
+            '}';
+            document.head.appendChild(style);
+
+            // Function to load images from Unsplash
+            async function loadUnsplashImage(search, imgElement) {
+                try {
+                    const response = await fetch(`https://source.unsplash.com/800x600/?${encodeURIComponent(search)}`);
+                    if (response.ok) {
+                        imgElement.src = response.url;
+                        imgElement.parentElement.classList.remove('loading');
+                    } else {
+                        throw new Error('Failed to load image');
+                    }
+                } catch (error) {
+                    imgElement.style.display = 'none';
+                    imgElement.parentElement.classList.remove('loading');
+                    imgElement.parentElement.classList.add('error');
+                }
+            }
+
+            container.innerHTML = '<section class="hero-section city-hero" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(\'image/' + currentCity.dir + '/' + currentCity.heroImage + '\')">' +
+                '<div class="hero-content">' +
+                    '<h1 class="city-title">' + cityName + '</h1>' +
+                    '<div class="city-quick-info">' +
+                        '<div class="weather-container">' +
+                            '<div class="weather-info">' +
+                                '<div class="loading-weather">جاري تحميل معلومات الطقس...</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="quick-stats">' +
+                            '<div class="stat-item">' +
+                                '<span class="stat-icon">🏨</span>' +
+                                '<span class="stat-value">' + hotels.length + '</span>' +
+                                '<span class="stat-label">فندق</span>' +
+                            '</div>' +
+                            '<div class="stat-item">' +
+                                '<span class="stat-icon">👥</span>' +
+                                '<span class="stat-value">' + guides.length + '</span>' +
+                                '<span class="stat-label">مرشد سياحي</span>' +
+                            '</div>' +
+                            '<div class="stat-item">' +
+                                '<span class="stat-icon">🎯</span>' +
+                                '<span class="stat-value">' + tourism.types.length + '</span>' +
+                                '<span class="stat-label">نوع سياحي</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</section>' +
+            '<section class="features-section">' +
+                '<div class="features-container">' +
+                    '<h2 class="features-title">معالم ' + cityName + '</h2>' +
+                    '<div class="city-gallery">' +
+                        '<div class="gallery-grid">' +
+                            currentCity.landmarks.map((landmark, index) => 
+                                '<div class="gallery-item loading" data-caption="' + landmark.caption + '">' +
+                                    '<img class="gallery-img" ' +
+                                        'alt="' + landmark.caption + '"' +
+                                        'loading="lazy"' +
+                                        'onload="this.parentElement.classList.remove(\'loading\')"' +
+                                        'onerror="loadUnsplashImage(\'' + landmark.search + '\', this)">' +
+                                    '<div class="gallery-caption">' + landmark.caption + '</div>' +
+                                '</div>'
+                            ).join('') +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</section>' +
+            '<section class="features-section">' +
+                '<div class="features-container">' +
+                    '<h2 class="features-title">أنواع السياحة في ' + cityName + '</h2>' +
+                    '<div class="tourism-intro">' +
+                        '<p>هذه المدينة مناسبة لمختلف أنواع السياحة، بما في ذلك السياحة البحرية والبرية والتراثية.</p>' +
+                    '</div>' +
+                    '<div class="features-grid">' +
+                        '<div class="feature-card">' +
+                            '<div class="feature-icon">🏖️</div>' +
+                            '<h3>السياحة البحرية</h3>' +
+                            '<p>استمتع بالشواطئ الجميلة والرياضات المائية</p>' +
+                            '<ul class="feature-list">' +
+                                '<li>شواطئ رملية خلابة</li>' +
+                                '<li>رياضات مائية متنوعة</li>' +
+                                '<li>رحلات بحرية ممتعة</li>' +
+                            '</ul>' +
+                        '</div>' +
+                        '<div class="feature-card">' +
+                            '<div class="feature-icon">🏜️</div>' +
+                            '<h3>السياحة البرية</h3>' +
+                            '<p>اكتشف المناظر الطبيعية والمغامرات البرية</p>' +
+                            '<ul class="feature-list">' +
+                                '<li>رحلات السفاري</li>' +
+                                '<li>التخييم في الصحراء</li>' +
+                                '<li>مسارات المشي الطبيعية</li>' +
+                            '</ul>' +
+                        '</div>' +
+                        '<div class="feature-card">' +
+                            '<div class="feature-icon">🏛️</div>' +
+                            '<h3>السياحة التراثية</h3>' +
+                            '<p>تعرف على التاريخ والثقافة المحلية</p>' +
+                            '<ul class="feature-list">' +
+                                '<li>المواقع التاريخية</li>' +
+                                '<li>المتاحف التراثية</li>' +
+                                '<li>الأسواق الشعبية</li>' +
+                            '</ul>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="tourism-tags">' +
+                        tourism.types.map(type => '<span class="tourism-tag">' + type + '</span>').join('') +
+                    '</div>' +
+                '</div>' +
+            '</section>' +
+            '<section class="features-section hotels-section">' +
+                '<div class="features-container">' +
+                    '<h2 class="features-title">الفنادق المتاحة في ' + cityName + '</h2>' +
+                    '<div class="section-intro">' +
+                        '<p>اختر من بين مجموعة متنوعة من الفنادق الفاخرة والمريحة التي تناسب جميع الأذواق والميزانيات.</p>' +
+                    '</div>' +
+                    '<div class="features-grid">' +
+                        hotels.map(hotel => 
+                            '<div class="feature-card hotel-card">' +
+                                '<div class="hotel-header">' +
+                                    '<h3>' + hotel.name + '</h3>' +
+                                    '<div class="rating">' +
+                                        '<span class="stars">' + '⭐'.repeat(Math.floor(hotel.rating)) + '</span>' +
+                                        '<span class="rating-value">' + hotel.rating + '</span>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<p class="description">' + hotel.desc + '</p>' +
+                                '<div class="meta">' +
+                                    '<div class="address">' +
+                                        '<span class="meta-icon">📍</span>' +
+                                        '<span>' + hotel.address + '</span>' +
+                                    '</div>' +
+                                    '<div class="phone">' +
+                                        '<span class="meta-icon">☎️</span>' +
+                                        '<span>' + hotel.phone + '</span>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="hotel-features">' +
+                                    '<span class="feature">واي فاي مجاني</span>' +
+                                    '<span class="feature">موقف سيارات</span>' +
+                                    '<span class="feature">مسبح</span>' +
+                                '</div>' +
+                                '<a href="' + hotel.url + '" target="_blank" class="cta-button">زيارة الموقع</a>' +
+                            '</div>'
+                        ).join('') +
+                    '</div>' +
+                '</div>' +
+            '</section>' +
+            '<section class="features-section guides-section">' +
+                '<div class="features-container">' +
+                    '<h2 class="features-title">المرشدون السياحيون في ' + cityName + '</h2>' +
+                    '<div class="section-intro">' +
+                        '<p>استكشف المدينة مع مرشدين سياحيين محترفين يقدمون تجارب فريدة وممتعة.</p>' +
+                    '</div>' +
+                    '<div class="features-grid">' +
+                        guides.map(guide => 
+                            '<div class="feature-card guide-card">' +
+                                '<div class="guide-header">' +
+                                    '<h3>' + guide.name + '</h3>' +
+                                    '<div class="rating">' +
+                                        '<span class="stars">' + '⭐'.repeat(Math.floor(guide.rating)) + '</span>' +
+                                        '<span class="rating-value">' + guide.rating + '</span>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="guide-specialties">' +
+                                    '<span class="specialty">جولات تراثية</span>' +
+                                    '<span class="specialty">رحلات برية</span>' +
+                                    '<span class="specialty">جولات بحرية</span>' +
+                                '</div>' +
+                                '<p class="description">' + guide.desc + '</p>' +
+                                '<div class="guide-languages">' +
+                                    '<h4>اللغات:</h4>' +
+                                    '<span class="language">العربية</span>' +
+                                    '<span class="language">الإنجليزية</span>' +
+                                '</div>' +
+                                '<div class="phone">' +
+                                    '<span class="meta-icon">☎️</span>' +
+                                    '<span>' + guide.phone + '</span>' +
+                                '</div>' +
+                                '<a href="https://wa.me/' + guide.phone.replace(/[^\d]/g, '') + '" target="_blank" class="cta-button">احجز الآن عبر واتساب</a>' +
+                            '</div>'
+                        ).join('') +
+                    '</div>' +
+                '</div>' +
+            '</section>' +
+            '<section class="features-section" id="planSection">' +
+                '<div class="features-container">' +
+                    '<h2 class="features-title">جدول رحلتك</h2>' +
+                    '<div class="plan-container">' +
+                        '<a href="travel-schedule.html" class="cta-button">ابدأ التخطيط</a>' +
+                    '</div>' +
+                '</div>' +
+            '</section>' +
+            '<div class="back-section">' +
+                '<a href="index.html" class="cta-button">العودة للرئيسية</a>' +
+            '</div>';
+
+            // Load images
+            document.querySelectorAll('.gallery-img').forEach((img, index) => {
+                const landmark = currentCity.landmarks[index];
+                img.src = landmark.url;
+            });
+
+            // Fetch and update weather
+            const weatherContainer = container.querySelector('.weather-info');
+            fetchWeather(cityName).then(weather => {
+                if (weather) {
+                    weatherContainer.innerHTML = '<div class="weather-data">' +
+                        '<img src="http://openweathermap.org/img/w/' + weather.icon + '.png" alt="حالة الطقس">' +
+                        '<div class="weather-details">' +
+                            '<div class="temp">' + weather.temp + '°C</div>' +
+                            '<span class="desc">' + weather.description + '</span>' +
+                        '</div>' +
+                    '</div>';
+                } else {
+                    weatherContainer.innerHTML = '<div class="weather-error">' +
+                        '<div class="temp">25°C</div>' +
+                        '<span class="desc">درجة حرارة</span>' +
+                    '</div>';
+                }
+            });
+
+            // Initialize planning functionality
+            const questions = [
+                {
+                    id: 'duration',
+                    text: 'كم يوم تخطط للإقامة؟',
+                    type: 'number',
+                    placeholder: 'عدد الأيام'
+                },
+                {
+                    id: 'budget',
+                    text: 'ما هي ميزانيتك التقريبية؟',
+                    type: 'number',
+                    placeholder: 'الميزانية بالريال'
+                },
+                {
+                    id: 'interests',
+                    text: 'ما هي اهتماماتك؟',
+                    type: 'multiple',
+                    options: ['المعالم التاريخية', 'التسوق', 'المطاعم', 'الأنشطة الترفيهية', 'الثقافة المحلية']
+                },
+                {
+                    id: 'accommodation',
+                    text: 'ما نوع الإقامة المفضل لديك؟',
+                    type: 'single',
+                    options: ['فندق فاخر', 'فندق متوسط', 'شقة مفروشة', 'منتجع']
+                },
+                {
+                    id: 'transportation',
+                    text: 'كيف تفضل التنقل في المدينة؟',
+                    type: 'single',
+                    options: ['سيارة خاصة', 'مواصلات عامة', 'سيارة مع سائق', 'تاكسي']
+                }
+            ];
+
+            let currentQuestionIndex = 0;
+            let answers = {};
+
+            // Get DOM elements
+            const startButton = document.getElementById('startPlanningBtn');
+            const questionnaireDiv = document.getElementById('planningQuestionnaire');
+            const questionContainer = document.querySelector('.question-container');
+            const planSummary = document.getElementById('planSummary');
+            const planDetails = document.getElementById('planDetails');
+            const savePlanBtn = document.getElementById('savePlanBtn');
+
+            // Add event listeners
+            startButton.addEventListener('click', startPlanning);
+            savePlanBtn.addEventListener('click', savePlan);
+
+            function startPlanning() {
+                questionnaireDiv.style.display = 'block';
+                showQuestion(0);
+            }
+
+            function showQuestion(index) {
+                const question = questions[index];
+                let questionHtml = '<div class="question-box">' +
+                    '<h3>' + question.text + '</h3>';
+
+                if (question.type === 'number') {
+                    questionHtml += '<input type="number" ' +
+                        'class="input-field" ' +
+                        'placeholder="' + question.placeholder + '" ' +
+                        'value="' + (answers[question.id] || '') + '" ' +
+                        'onchange="handleNumberInput(\'' + question.id + '\', this.value)">';
+                } else {
+                    questionHtml += '<div class="options-container">';
+                    question.options.forEach(option => {
+                        const isSelected = question.type === 'multiple' 
+                            ? (answers[question.id] || []).includes(option)
+                            : answers[question.id] === option;
+                        questionHtml += '<button class="option-button ' + (isSelected ? 'selected' : '') + '" ' +
+                            'onclick="handleOptionSelect(\'' + question.id + '\', \'' + option + '\', ' + (question.type === 'multiple') + ', this)">' +
+                            option +
+                            '</button>';
+                    });
+                    questionHtml += '</div>';
+                }
+
+                questionHtml += '<div style="margin-top: 20px;">' +
+                    (index > 0 ? '<button class="cta-button" onclick="showPreviousQuestion()">السابق</button>' : '') +
+                    (index < questions.length - 1 
+                        ? '<button class="cta-button" onclick="showNextQuestion()">التالي</button>'
+                        : '<button class="cta-button" onclick="showPlanSummary()">إنهاء</button>') +
+                    '</div>' +
+                '</div>';
+
+                questionContainer.innerHTML = questionHtml;
+                currentQuestionIndex = index;
+            }
+
+            // Make functions globally available
+            window.handleNumberInput = function(questionId, value) {
+                answers[questionId] = value;
+            };
+
+            window.handleOptionSelect = function(questionId, value, isMultiple, button) {
+                if (isMultiple) {
+                    answers[questionId] = answers[questionId] || [];
+                    const index = answers[questionId].indexOf(value);
+                    
+                    if (index === -1) {
+                        answers[questionId].push(value);
+                        button.classList.add('selected');
+                    } else {
+                        answers[questionId].splice(index, 1);
+                        button.classList.remove('selected');
+                    }
+                } else {
+                    const allButtons = button.parentElement.querySelectorAll('.option-button');
+                    allButtons.forEach(btn => btn.classList.remove('selected'));
+                    answers[questionId] = value;
+                    button.classList.add('selected');
+                }
+            };
+
+            window.showPreviousQuestion = function() {
+                if (currentQuestionIndex > 0) {
+                    showQuestion(currentQuestionIndex - 1);
+                }
+            };
+
+            window.showNextQuestion = function() {
+                if (currentQuestionIndex < questions.length - 1) {
+                    showQuestion(currentQuestionIndex + 1);
+                }
+            };
+
+            window.showPlanSummary = function() {
+                let summaryHtml = '';
+                questions.forEach(question => {
+                    const answer = answers[question.id];
+                    if (answer) {
+                        summaryHtml += '<div class="plan-detail-item">' +
+                            '<strong>' + question.text + '</strong>' +
+                            '<p>' + (Array.isArray(answer) ? answer.join('، ') : answer) + '</p>' +
+                        '</div>';
+                    }
+                });
+
+                // Add suggested itinerary
+                const days = parseInt(answers.duration) || 3;
+                const interests = answers.interests || [];
+                
+                // Define all possible activities for each interest
+                const activities = {
+                    'المعالم التاريخية': [
+                        'زيارة ' + currentCity.landmarks[0].caption,
+                        'زيارة ' + currentCity.landmarks[1].caption,
+                        'جولة في المواقع التاريخية',
+                        'زيارة المتاحف التراثية',
+                        'استكشاف القصور القديمة',
+                        'زيارة الأسواق التقليدية'
+                    ],
+                    'التسوق': [
+                        'زيارة مراكز التسوق الحديثة',
+                        'جولة في الأسواق الشعبية',
+                        'تسوق في المنطقة التجارية',
+                        'زيارة معارض المنتجات المحلية',
+                        'تسوق في سوق الحرف اليدوية',
+                        'زيارة مولات التسوق الفاخرة'
+                    ],
+                    'المطاعم': [
+                        'تناول وجبة في مطعم محلي شهير',
+                        'تجربة المأكولات التقليدية',
+                        'زيارة المطاعم المطلة على البحر',
+                        'تذوق الحلويات المحلية',
+                        'زيارة المقاهي الشعبية',
+                        'تجربة المطاعم الفاخرة'
+                    ],
+                    'الأنشطة الترفيهية': [
+                        'زيارة الحدائق العامة',
+                        'ممارسة الرياضات المائية',
+                        'جولة في المنتزهات الترفيهية',
+                        'زيارة مراكز الترفيه العائلية',
+                        'ممارسة رياضة المشي',
+                        'زيارة النوادي الرياضية'
+                    ],
+                    'الثقافة المحلية': [
+                        'زيارة المعارض الفنية',
+                        'حضور فعاليات ثقافية',
+                        'زيارة المراكز الثقافية',
+                        'مشاهدة العروض التراثية',
+                        'زيارة المكتبات العامة',
+                        'حضور ورش العمل المحلية'
+                    ]
+                };
+
+                // Helper function to shuffle array
+                function shuffleArray(array) {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                    return array;
+                }
+
+                summaryHtml += '<div class="plan-detail-item">' +
+                    '<h3>البرنامج المقترح</h3>';
+
+                for (let i = 1; i <= days; i++) {
+                    summaryHtml += '<div class="day-header">اليوم ' + i + '</div>' +
+                        '<div style="margin-top: 15px;">' +
+                        '<ul>';
+
+                    // Get all possible activities based on interests
+                    let dayActivities = [];
+                    interests.forEach(interest => {
+                        if (activities[interest]) {
+                            dayActivities = dayActivities.concat(activities[interest]);
+                        }
+                    });
+
+                    // Shuffle activities and select 3-4 random ones
+                    dayActivities = shuffleArray(dayActivities);
+                    const numActivities = Math.min(Math.floor(Math.random() * 2) + 3, dayActivities.length);
+                    
+                    // Add morning, afternoon, and evening activities
+                    const timeSlots = ['صباحاً', 'ظهراً', 'مساءً'];
+                    for (let j = 0; j < numActivities; j++) {
+                        const timeSlot = timeSlots[j % timeSlots.length];
+                        summaryHtml += '<li>' + timeSlot + ': ' + dayActivities[j] + '</li>';
+                    }
+
+                    // Add random meal suggestions
+                    const meals = [
+                        'تناول وجبة الإفطار في مطعم محلي',
+                        'تناول وجبة الغداء في مطعم تقليدي',
+                        'تناول وجبة العشاء في مطعم فاخر'
+                    ];
+                    const meal = meals[Math.floor(Math.random() * meals.length)];
+                    summaryHtml += '<li class="meal-suggestion">' + meal + '</li>';
+
+                    summaryHtml += '</ul>' +
+                        '</div>';
+                }
+
+                // Add random tips
+                const tips = [
+                    'ننصح ببدء اليوم مبكراً لاستغلال الوقت بشكل أفضل',
+                    'احرص على ارتداء ملابس مريحة ومناسبة للطقس',
+                    'لا تنسَ أخذ كاميرا لالتقاط الصور التذكارية',
+                    'احتفظ بخريطة المدينة معك دائماً',
+                    'تأكد من وجود بطارية احتياطية لهاتفك',
+                    'احرص على شرب كميات كافية من الماء'
+                ];
+                const randomTip = tips[Math.floor(Math.random() * tips.length)];
+                
+                summaryHtml += '<div class="plan-detail-item tips">' +
+                    '<h3>نصائح مفيدة</h3>' +
+                    '<p>' + randomTip + '</p>' +
+                '</div>';
+
+                planDetails.innerHTML = summaryHtml;
+                planSummary.style.display = 'block';
+            };
+
+            function savePlan() {
+                // Here you can implement saving the plan to localStorage or send it to a server
+                alert('تم حفظ خطة رحلتك بنجاح!');
+            }
+
+            // Add styles for the planning section
+            const planningStyles = document.createElement('style');
+            planningStyles.textContent = '.plan-container {' +
+                'max-width: 800px;' +
+                'margin: 0 auto;' +
+                'padding: 20px;' +
+                'background: #f9f9f9;' +
+                'border-radius: 15px;' +
+                'box-shadow: 0 4px 12px rgba(0,0,0,0.05);' +
+            '}' +
+            '.question-box {' +
+                'background: #fff;' +
+                'border-radius: 15px;' +
+                'padding: 25px;' +
+                'margin: 15px 0;' +
+                'box-shadow: 0 2px 8px rgba(0,0,0,0.08);' +
+                'transition: transform 0.3s ease;' +
+            '}' +
+            '.question-box:hover {' +
+                'transform: translateY(-2px);' +
+            '}' +
+            '.question-box h3 {' +
+                'color: #2c3e50;' +
+                'margin-bottom: 15px;' +
+                'font-size: 1.2em;' +
+            '}' +
+            '.options-container {' +
+                'display: flex;' +
+                'flex-wrap: wrap;' +
+                'gap: 12px;' +
+                'margin-top: 15px;' +
+            '}' +
+            '.option-button {' +
+                'padding: 10px 20px;' +
+                'border: 2px solid #e0e0e0;' +
+                'border-radius: 25px;' +
+                'background: #fff;' +
+                'cursor: pointer;' +
+                'transition: all 0.3s ease;' +
+                'font-size: 0.95em;' +
+                'color: #444;' +
+            '}' +
+            '.option-button:hover {' +
+                'background: #f5f5f5;' +
+                'transform: translateY(-1px);' +
+            '}' +
+            '.option-button.selected {' +
+                'background: #2ecc71;' +
+                'color: white;' +
+                'border-color: #27ae60;' +
+                'box-shadow: 0 2px 4px rgba(46,204,113,0.2);' +
+            '}' +
+            '.input-field {' +
+                'width: 100%;' +
+                'padding: 12px;' +
+                'margin: 8px 0;' +
+                'border: 2px solid #e0e0e0;' +
+                'border-radius: 8px;' +
+                'font-size: 1em;' +
+                'transition: border-color 0.3s ease;' +
+            '}' +
+            '.input-field:focus {' +
+                'border-color: #3498db;' +
+                'outline: none;' +
+            '}' +
+            '.plan-detail-item {' +
+                'background: #fff;' +
+                'padding: 20px;' +
+                'margin: 15px 0;' +
+                'border-radius: 12px;' +
+                'box-shadow: 0 2px 10px rgba(0,0,0,0.05);' +
+                'transition: transform 0.3s ease;' +
+            '}' +
+            '.plan-detail-item:hover {' +
+                'transform: translateY(-2px);' +
+            '}' +
+            '.plan-detail-item h3 {' +
+                'color: #2c3e50;' +
+                'margin-bottom: 15px;' +
+                'font-size: 1.3em;' +
+                'border-bottom: 2px solid #e0e0e0;' +
+                'padding-bottom: 10px;' +
+            '}' +
+            '.plan-detail-item ul {' +
+                'list-style-type: none;' +
+                'padding: 0;' +
+                'margin: 0;' +
+            '}' +
+            '.plan-detail-item li {' +
+                'padding: 10px 15px;' +
+                'margin: 5px 0;' +
+                'background: #f8f9fa;' +
+                'border-radius: 8px;' +
+                'display: flex;' +
+                'align-items: center;' +
+                'gap: 10px;' +
+            '}' +
+            '.plan-detail-item li::before {' +
+                'content: "🎯";' +
+                'margin-left: 5px;' +
+            '}' +
+            '.plan-detail-item.tips {' +
+                'background: #e8f5e9;' +
+                'border-right: 4px solid #2ecc71;' +
+            '}' +
+            '.plan-detail-item.tips h3 {' +
+                'color: #2ecc71;' +
+                'border-bottom-color: #a5d6a7;' +
+            '}' +
+            '.plan-detail-item.tips p {' +
+                'color: #2c3e50;' +
+                'line-height: 1.6;' +
+                'margin: 0;' +
+            '}' +
+            '.plan-detail-item.tips p::before {' +
+                'content: "💡";' +
+                'margin-left: 8px;' +
+            '}' +
+            '#startPlanningBtn {' +
+                'background: linear-gradient(45deg, #2ecc71, #27ae60);' +
+                'color: white;' +
+                'border: none;' +
+                'padding: 15px 30px;' +
+                'border-radius: 25px;' +
+                'font-size: 1.1em;' +
+                'cursor: pointer;' +
+                'transition: transform 0.3s ease, box-shadow 0.3s ease;' +
+                'box-shadow: 0 4px 15px rgba(46,204,113,0.2);' +
+                'display: block;' +
+                'margin: 20px auto;' +
+                'width: fit-content;' +
+            '}' +
+            '#startPlanningBtn:hover {' +
+                'transform: translateY(-2px);' +
+                'box-shadow: 0 6px 20px rgba(46,204,113,0.3);' +
+            '}' +
+            '#savePlanBtn {' +
+                'background: linear-gradient(45deg, #3498db, #2980b9);' +
+                'color: white;' +
+                'border: none;' +
+                'padding: 12px 25px;' +
+                'border-radius: 20px;' +
+                'font-size: 1em;' +
+                'cursor: pointer;' +
+                'transition: transform 0.3s ease, box-shadow 0.3s ease;' +
+                'box-shadow: 0 4px 15px rgba(52,152,219,0.2);' +
+                'display: block;' +
+                'margin: 20px auto;' +
+                'width: fit-content;' +
+            '}' +
+            '#savePlanBtn:hover {' +
+                'transform: translateY(-2px);' +
+                'box-shadow: 0 6px 20px rgba(52,152,219,0.3);' +
+            '}' +
+            '.time-slot {' +
+                'color: #e67e22;' +
+                'font-weight: bold;' +
+                'margin-left: 5px;' +
+            '}' +
+            '.meal-suggestion {' +
+                'background: #fff3e0 !important;' +
+                'border-right: 4px solid #e67e22;' +
+            '}' +
+            '.meal-suggestion::before {' +
+                'content: "🍽️" !important;' +
+            '}' +
+            '.day-header {' +
+                'background: #2c3e50;' +
+                'color: white;' +
+                'padding: 12px 20px;' +
+                'border-radius: 8px;' +
+                'margin: 20px 0 15px 0;' +
+                'font-size: 1.2em;' +
+                'display: flex;' +
+                'align-items: center;' +
+                'gap: 10px;' +
+            '}' +
+            '.day-header::before {' +
+                'content: "📅";' +
+            '}';
+            document.head.appendChild(planningStyles);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCityDetails);
+
+        // Handle dark mode
+        const darkToggle = document.getElementById('darkModeToggle');
+        if (darkToggle) {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+                darkToggle.textContent = 'وضع النهار';
+            }
+            
+            darkToggle.onclick = function() {
+                document.body.classList.toggle('dark');
+                darkToggle.textContent = document.body.classList.contains('dark') ? 'وضع النهار' : 'الوضع الليلي';
+                localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we should scroll to planning section
+            if (window.location.hash === '#planSection') {
+                const planSection = document.getElementById('planSection');
+                if (planSection) {
+                    setTimeout(() => {
+                        planSection.scrollIntoView({ behavior: 'smooth' });
+                        // Automatically start planning
+                        const startPlanningBtn = document.getElementById('startPlanningBtn');
+                        if (startPlanningBtn) {
+                            startPlanningBtn.click();
+                        }
+                    }, 1000); // Delay to ensure content is loaded
+                }
+            }
+        });
+    </script>
+</body>
+</html>

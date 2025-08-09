@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المدينة ترحّب - عرض تقديمي</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1a5f3a 0%, #2d7d4a 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #1a5f3a;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .slide-subtitle {
+            font-size: 1.8rem;
+            color: #2d7d4a;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .slide-content {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .slide-list {
+            text-align: right;
+            list-style: none;
+            font-size: 1.2rem;
+            line-height: 2;
+        }
+
+        .slide-list li {
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+            position: relative;
+        }
+
+        .slide-list li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            color: #1a5f3a;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .slide-image {
+            max-width: 400px;
+            max-height: 300px;
+            margin: 2rem auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #1a5f3a, #2d7d4a);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 95, 58, 0.3);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(26, 95, 58, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            z-index: 1000;
+        }
+
+        .highlight {
+            color: #d4af37;
+            font-weight: 700;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 2.5rem;
+            }
+            
+            .slide-subtitle {
+                font-size: 1.4rem;
+            }
+            
+            .slide-content {
+                font-size: 1.1rem;
+            }
+            
+            .slide {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="position:fixed; top:12px; inset-inline-end:12px; z-index:2000;">
+      <div class="language-dropdown">
+        <button id="languageToggle" class="cta-button header-cta" aria-haspopup="true" aria-expanded="false">اللغة</button>
+        <div id="languageMenu" class="language-menu" role="menu" aria-label="Language menu">
+          <button type="button" class="language-option" data-lang="ar" role="menuitem">العربية</button>
+          <button type="button" class="language-option" data-lang="en" role="menuitem">English</button>
+          <button type="button" class="language-option" data-lang="fr" role="menuitem">Français</button>
+          <button type="button" class="language-option" data-lang="zh" role="menuitem">中文</button>
+          <button type="button" class="language-option" data-lang="hi" role="menuitem">हिन्दी</button>
+          <button type="button" class="language-option" data-lang="id" role="menuitem">Bahasa Indonesia</button>
+        </div>
+      </div>
+    </div>
+    <div class="presentation-container">
+        <!-- Slide 1 - الغلاف -->
+        <div class="slide active" id="slide1">
+            <h1 class="slide-title" data-i18n="presentation.slide1.title">المدينة ترحّب</h1>
+            <h2 class="slide-subtitle" data-i18n="presentation.slide1.subtitle">حل ذكي لتجربة إقامة متكاملة في المدينة المنورة</h2>
+            <div class="slide-content">
+                <p data-i18n="presentation.slide1.tagline">"من لحظة وصولك حتى مغادرتك… كل ما تحتاجه في المدينة المنورة في تطبيق واحد"</p>
+                <img src="images/landmarks/Jeddah/المدينة المنوره.jpeg" alt="الحرم النبوي" class="slide-image">
+            </div>
+        </div>
+
+        <!-- Slide 2 - المشكلة -->
+        <div class="slide" id="slide2">
+            <h1 class="slide-title" data-i18n="presentation.slide2.title">التحديات التي يواجهها الزائر في المدينة المنورة</h1>
+            <div class="slide-content">
+                <ul class="slide-list">
+                    <li data-i18n="presentation.slide2.items.0">صعوبة إيجاد سكن مرخّص قريب من الخدمات</li>
+                    <li data-i18n="presentation.slide2.items.1">نقص المعلومات عن الأنشطة السياحية والدينية والثقافية</li>
+                    <li data-i18n="presentation.slide2.items.2">عدم توفر وسيلة للتواصل الفوري مع خدمات مساندة (مغسلة، بقالة، عامل)</li>
+                    <li data-i18n="presentation.slide2.items.3">غياب حلول مخصصة للسياحة العلاجية للمرضى والزوار</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 3 - الحل -->
+        <div class="slide" id="slide3">
+            <h1 class="slide-title" data-i18n="presentation.slide3.title">حل متكامل للزوار</h1>
+            <div class="slide-content">
+                <ul class="slide-list">
+                    <li data-i18n="presentation.slide3.items.0">عرض جميع أماكن الإقامة المرخصة مع خاصية تأكيد الترخيص</li>
+                    <li data-i18n="presentation.slide3.items.1">تقديم قائمة بالأنشطة (دينية، ثقافية، علاجية) مع الحجز الفوري</li>
+                    <li data-i18n="presentation.slide3.items.2">ميزة "المواقع القريبة منك" لعرض: مغسلة، بقالة، عامل، خدمات طبية</li>
+                    <li data-i18n="presentation.slide3.items.3">إرشاد سياحي رقمي مع إمكانية حجز مرشدين معتمدين</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4 - لماذا المدينة المنورة -->
+        <div class="slide" id="slide4">
+            <h1 class="slide-title" data-i18n="presentation.slide4.title">المدينة المنورة… قلب الضيافة الإسلامية</h1>
+            <div class="slide-content">
+                <ul class="slide-list">
+                    <li data-i18n="presentation.slide4.items.0">ثاني أقدس مدينة في الإسلام وتستقبل ملايين الحجاج والمعتمرين سنويًا</li>
+                    <li data-i18n="presentation.slide4.items.1">وجهة متنامية للسياحة العلاجية بفضل مرافقها الطبية المتقدمة</li>
+                    <li data-i18n="presentation.slide4.items.2">تنوع في المزارات التاريخية والمزارع والأسواق التراثية</li>
+                    <li data-i18n="presentation.slide4.items.3">نمو مستمر في قطاع الضيافة بدعم من رؤية 2030</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5 - مزايا التطبيق -->
+        <div class="slide" id="slide5">
+            <h1 class="slide-title" data-i18n="presentation.slide5.title">مزايا تجعل رحلتك أسهل</h1>
+            <div class="slide-content">
+                <ul class="slide-list">
+                    <li data-i18n="presentation.slide5.items.0">تأكيد الترخيص لكل عقار قبل الحجز</li>
+                    <li data-i18n="presentation.slide5.items.1">عرض جميع الخدمات القريبة من موقع إقامتك</li>
+                    <li data-i18n="presentation.slide5.items.2">تصميم جدول سياحي مخصص حسب اهتماماتك</li>
+                    <li data-i18n="presentation.slide5.items.3">واجهة سهلة الاستخدام بعدة لغات</li>
+                    <li data-i18n="presentation.slide5.items.4">تكامل مع الخرائط والجهات الرسمية</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6 - الفئة المستهدفة -->
+        <div class="slide" id="slide6">
+            <h1 class="slide-title" data-i18n="presentation.slide6.title">من نخدم؟</h1>
+            <div class="slide-content">
+                <ul class="slide-list">
+                    <li data-i18n="presentation.slide6.items.0">الحجاج والمعتمرون</li>
+                    <li data-i18n="presentation.slide6.items.1">الزوار السياحيون من داخل وخارج المملكة</li>
+                    <li data-i18n="presentation.slide6.items.2">المرضى في برامج السياحة العلاجية</li>
+                    <li data-i18n="presentation.slide6.items.3">العوائل الباحثة عن إقامة مريحة وخدمات قريبة</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 7 - الأثر المتوقع -->
+        <div class="slide" id="slide7">
+            <h1 class="slide-title" data-i18n="presentation.slide7.title">أثرنا على المدينة والزائر</h1>
+            <div class="slide-content">
+                <ul class="slide-list">
+                    <li data-i18n="presentation.slide7.items.0">زيادة نسبة إشغال الفنادق المرخصة</li>
+                    <li data-i18n="presentation.slide7.items.1">رفع جودة تجربة الزائر وتحسين انطباعه</li>
+                    <li data-i18n="presentation.slide7.items.2">دعم الاقتصاد المحلي عبر زيادة الطلب على الخدمات</li>
+                    <li data-i18n="presentation.slide7.items.3">تعزيز مكانة المدينة المنورة كمركز للضيافة المتميزة</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8 - كيف يدعمنا الصندوق -->
+        <div class="slide" id="slide8">
+            <h1 class="slide-title" data-i18n="presentation.slide8.title">شراكتنا مع صندوق التنمية السياحي</h1>
+            <div class="slide-content">
+                <ul class="slide-list">
+                    <li data-i18n="presentation.slide8.items.0">تمويل لتوسيع قاعدة البيانات وتطوير التقنية</li>
+                    <li data-i18n="presentation.slide8.items.1">شراكات مع الفنادق والمرافق السياحية</li>
+                    <li data-i18n="presentation.slide8.items.2">دعم تسويقي للوصول إلى أكبر شريحة من الزوار</li>
+                    <li data-i18n="presentation.slide8.items.3">مواءمة المشروع مع مبادرات رؤية 2030</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9 - فريق العمل -->
+        <div class="slide" id="slide9">
+            <h1 class="slide-title" data-i18n="presentation.slide9.title">من يقف خلف المشروع؟</h1>
+            <div class="slide-content">
+                <ul class="slide-list">
+                    <li data-i18n="presentation.slide9.items.0"><span class="highlight">[اسمك]</span> – إدارة المشروع</li>
+                    <li data-i18n="presentation.slide9.items.1"><span class="highlight">[الاسم]</span> – تطوير التطبيقات</li>
+                    <li data-i18n="presentation.slide9.items.2"><span class="highlight">[الاسم]</span> – تسويق وشراكات</li>
+                    <li data-i18n="presentation.slide9.items.3"><span class="highlight">[الاسم]</span> – تصميم وتجربة المستخدم</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 10 - الختام -->
+        <div class="slide" id="slide10">
+            <h1 class="slide-title" data-i18n="presentation.slide10.title">رحلتك تبدأ من هنا</h1>
+            <div class="slide-content">
+                <p data-i18n="presentation.slide10.cta">جرّب تطبيق "المدينة ترحّب" واستمتع بتجربة إقامة متكاملة وخدمات ذكية</p>
+                <div class="qr-code">
+                    <span data-i18n="presentation.slide10.qr">QR Code<br>لنسخة تجريبية</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">10</span>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn" onclick="previousSlide()" data-i18n="presentation.prev">السابق</button>
+            <button class="nav-btn" onclick="nextSlide()" data-i18n="presentation.next">التالي</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(slideNumber) {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Show current slide
+            document.getElementById(`slide${slideNumber}`).classList.add('active');
+
+            // Update counter
+            document.getElementById('currentSlide').textContent = slideNumber;
+            document.getElementById('totalSlides').textContent = totalSlides;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(1);
+    </script>
+</body>
+</html>

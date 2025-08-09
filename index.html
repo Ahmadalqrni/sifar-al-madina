@@ -1,0 +1,3377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المدينة المنورة - رحلتك الروحانية</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Cairo:wght@400;600;700;900&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin="" />
+    <style>
+      /* Al Madina Focused Design */
+      :root {
+        --madina-green: #1a5f3a;
+        --madina-gold: #d4af37;
+        --madina-light: #f8f9fa;
+        --madina-dark: #0d2e1a;
+        --madina-accent: #2d7d4a;
+        --madina-text: #2c3e50;
+        --madina-shadow: rgba(26, 95, 58, 0.1);
+      }
+
+      body {
+        font-family: 'Cairo', 'Outfit', sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+        color: var(--madina-text);
+      }
+
+      /* Hero Section - Al Madina Focused */
+      .hero-section {
+        min-height: 100vh;
+        background: linear-gradient(135deg, rgba(26, 95, 58, 0.9) 0%, rgba(45, 125, 74, 0.8) 100%),
+                    url('https://images.unsplash.com/photo-1586724237569-f3d0c1dee8a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .hero-content {
+        text-align: center;
+        color: white;
+        z-index: 2;
+        max-width: 1200px;
+        padding: 2rem;
+        position: relative;
+      }
+
+      .hero-content h1 {
+        font-size: 4.5rem;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        background: linear-gradient(45deg, #ffffff, #d4af37);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: titleGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes titleGlow {
+        from { filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
+        to { filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8)); }
+      }
+
+      .hero-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+        font-weight: 400;
+      }
+
+      .hero-description {
+        font-size: 1.2rem;
+        margin-bottom: 3rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.8;
+        opacity: 0.95;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 3rem;
+      }
+
+      .cta-button {
+        padding: 1.2rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        transform: translateY(0);
+      }
+
+      .cta-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+      }
+
+      .cta-button:hover::before {
+        left: 100%;
+      }
+
+      .cta-button:active {
+        transform: translateY(-1px);
+      }
+
+      .cta-button.primary {
+        background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+        color: var(--madina-dark);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+      }
+
+      .cta-button.primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+      }
+
+      .cta-button.secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+        backdrop-filter: blur(10px);
+      }
+
+      .cta-button.secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-3px);
+      }
+
+      /* Enhanced Floating Elements with Parallax */
+      .floating-elements {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .floating-element {
+        position: absolute;
+        opacity: 0.8;
+        font-size: 2rem;
+        filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        transition: all 0.3s ease;
+      }
+
+      .floating-element:nth-child(1) {
+        top: 20%;
+        left: 10%;
+        animation: float1 8s ease-in-out infinite;
+      }
+
+      .floating-element:nth-child(2) {
+        top: 60%;
+        right: 15%;
+        animation: float2 6s ease-in-out infinite;
+      }
+
+      .floating-element:nth-child(3) {
+        bottom: 30%;
+        left: 20%;
+        animation: float3 10s ease-in-out infinite;
+      }
+
+      .floating-element:nth-child(4) {
+        top: 40%;
+        right: 25%;
+        animation: float4 7s ease-in-out infinite;
+      }
+
+      .floating-element:nth-child(5) {
+        bottom: 20%;
+        right: 10%;
+        animation: float5 9s ease-in-out infinite;
+      }
+
+      @keyframes float1 {
+        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(-30px) rotate(5deg) scale(1.1); }
+      }
+
+      @keyframes float2 {
+        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(-25px) rotate(-3deg) scale(1.05); }
+      }
+
+      @keyframes float3 {
+        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(-35px) rotate(8deg) scale(1.15); }
+      }
+
+      @keyframes float4 {
+        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(-20px) rotate(-5deg) scale(1.08); }
+      }
+
+      @keyframes float5 {
+        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(-40px) rotate(10deg) scale(1.12); }
+      }
+
+      /* Particle Effects */
+      .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(212, 175, 55, 0.6);
+        border-radius: 50%;
+        animation: particleFloat 15s linear infinite;
+      }
+
+      @keyframes particleFloat {
+        0% {
+          transform: translateY(100vh) translateX(0);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) translateX(100px);
+          opacity: 0;
+        }
+      }
+
+      /* Features Section */
+      .features-section {
+        padding: 6rem 0;
+        background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+        color: white;
+      }
+
+      .features-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+
+      .features-title {
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        color: var(--madina-gold);
+      }
+
+      .features-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 4rem;
+        opacity: 0.9;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 3rem;
+        margin-top: 4rem;
+      }
+
+      .feature-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 3rem 2rem;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+      }
+
+      .feature-card:hover::before {
+        left: 100%;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        display: block;
+        text-align: center;
+      }
+
+      .feature-card h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--madina-dark);
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .feature-card p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: var(--madina-dark);
+        opacity: 0.9;
+        text-align: center;
+      }
+
+      /* Prayer Times Section */
+      .prayer-section {
+        background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+        padding: 6rem 0;
+        color: white;
+      }
+
+      .prayer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+
+      .prayer-title {
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        color: var(--madina-gold);
+      }
+
+      .prayer-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 3rem;
+        opacity: 0.9;
+      }
+
+      .prayer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .prayer-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2rem;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .prayer-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .prayer-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--madina-gold);
+      }
+
+      .prayer-time {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white;
+      }
+
+      /* Gallery Section */
+      .gallery-section {
+        padding: 6rem 0;
+        background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+        color: white;
+      }
+
+      .gallery-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+
+      .gallery-title {
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        color: var(--madina-gold);
+      }
+
+      .gallery-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 4rem;
+        opacity: 0.9;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 3rem;
+        margin-top: 4rem;
+      }
+
+      .gallery-item {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        transition: all 0.3s ease;
+      }
+
+      .gallery-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 20px 40px rgba(26, 95, 58, 0.2);
+      }
+
+      /* Icon mode for gallery */
+      .gallery-icon {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        margin: 2rem auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+        color: var(--madina-dark);
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .gallery-item:hover .gallery-icon {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 14px 30px rgba(212, 175, 55, 0.35);
+      }
+
+      .gallery-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        color: white;
+        padding: 2rem 1.5rem 1.5rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      /* Activities Section */
+      .activities-section {
+        padding: 6rem 0;
+        background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+        color: white;
+      }
+
+      .activities-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+
+      .activities-title {
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        color: var(--madina-gold);
+      }
+
+      .activities-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 4rem;
+        opacity: 0.9;
+      }
+
+      .activities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 3rem;
+        margin-top: 4rem;
+      }
+
+      .activity-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2.5rem;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .activity-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+      }
+
+      .activity-card:hover::before {
+        left: 100%;
+      }
+
+      .activity-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(26, 95, 58, 0.2);
+      }
+
+      .activity-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        display: block;
+      }
+
+      .activity-card h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--madina-gold);
+      }
+
+      .activity-card p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+        color: white;
+      }
+
+      .activity-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .activity-time,
+      .activity-price {
+        color: var(--madina-gold);
+      }
+
+      .activity-btn {
+        background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+        color: var(--madina-dark);
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Cairo', sans-serif;
+        width: 100%;
+      }
+
+      .activity-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+      }
+
+      @media (max-width: 768px) {
+        .activities-title {
+          font-size: 2.5rem;
+        }
+        
+        .activities-grid {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        
+        .activity-card {
+          padding: 2rem;
+        }
+        
+        .activity-details {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+
+      /* Contact Section */
+      .contact-section {
+        padding: 6rem 0;
+        background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+        color: white;
+      }
+
+      .contact-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+
+      .contact-title {
+        font-size: 3rem;
+        font-weight: 900;
+        color: var(--madina-gold);
+        margin-bottom: 1rem;
+      }
+
+      .contact-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 3rem;
+        opacity: 0.9;
+      }
+
+      .contact-form {
+        display: grid;
+        gap: 2rem;
+        max-width: 500px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 3rem;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .contact-form input,
+      .contact-form textarea {
+        padding: 1.2rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: 'Cairo', sans-serif;
+        background: rgba(255, 255, 255, 0.2);
+        color: var(--madina-dark);
+      }
+
+      .contact-form input::placeholder,
+      .contact-form textarea::placeholder {
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      .contact-form input:focus,
+      .contact-form textarea:focus {
+        border-color: var(--madina-gold);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .contact-form textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .contact-form button {
+        padding: 1.2rem 2.5rem;
+        background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+        color: var(--madina-dark);
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .contact-form button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--madina-dark);
+        color: white;
+        padding: 3rem 0 1rem;
+        text-align: center;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .footer-logo {
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--madina-gold);
+        margin-bottom: 1rem;
+      }
+
+      .footer-description {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-link {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .footer-link:hover {
+        color: var(--madina-gold);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 2rem;
+        opacity: 0.8;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .hero-content h1 {
+          font-size: 3rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1.2rem;
+        }
+
+        .hero-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .prayer-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .gallery-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-links {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-content h1 {
+          font-size: 2.5rem;
+        }
+
+        .features-title,
+        .prayer-title,
+        .gallery-title,
+        .contact-title {
+          font-size: 2rem;
+        }
+      }
+
+      
+
+        /* Presentation Section Styles */
+        /* Header actions (login + dark mode) */
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          margin-inline-start: 1rem;
+        }
+
+        .header-actions .login-btn,
+        .header-actions .header-cta {
+          height: 42px;
+          line-height: 42px;
+          padding: 0 16px;
+          border-radius: 30px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          white-space: nowrap;
+        }
+
+        .header-actions .login-btn {
+          background: transparent;
+          color: white;
+          border: 2px solid white;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+        }
+
+        .header-actions .login-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-actions .header-cta {
+          padding-inline: 18px;
+        }
+
+        @media (max-width: 768px) {
+          .header-actions {
+            gap: 0.5rem;
+          }
+          .header-actions .login-btn,
+          .header-actions .header-cta {
+            height: 38px;
+            line-height: 38px;
+            font-size: 0.9rem;
+            padding: 0 14px;
+          }
+        }
+        .presentation-section {
+          padding: 6rem 0;
+          background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+          color: white;
+        }
+
+        .presentation-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 2rem;
+          text-align: center;
+        }
+
+        .presentation-title {
+          font-size: 3rem;
+          font-weight: 900;
+          margin-bottom: 1rem;
+          color: var(--madina-gold);
+        }
+
+        .presentation-subtitle {
+          font-size: 1.3rem;
+          margin-bottom: 4rem;
+          opacity: 0.9;
+        }
+
+        .presentation-slides {
+          position: relative;
+          min-height: 600px;
+          margin-bottom: 3rem;
+        }
+
+        .presentation-slide {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          opacity: 0;
+          transform: translateX(100%);
+          transition: all 0.5s ease;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          padding: 3rem;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .presentation-slide.active {
+          opacity: 1;
+          transform: translateX(0);
+        }
+
+        .slide-content {
+          text-align: center;
+        }
+
+        .slide-content h3 {
+          font-size: 2.5rem;
+          font-weight: 900;
+          color: var(--madina-gold);
+          margin-bottom: 3rem;
+        }
+
+        .slide-points {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          max-width: 800px;
+          margin: 0 auto;
+        }
+
+        .point-item {
+          display: flex;
+          align-items: center;
+          gap: 1.5rem;
+          padding: 1.5rem;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 15px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.3s ease;
+          text-align: right;
+        }
+
+        .point-item:hover {
+          transform: translateX(-10px);
+          background: rgba(255, 255, 255, 0.2);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .point-icon {
+          font-size: 2rem;
+          min-width: 50px;
+          text-align: center;
+        }
+
+        .point-text {
+          font-size: 1.1rem;
+          line-height: 1.6;
+          color: white;
+          opacity: 0.9;
+          flex: 1;
+        }
+
+        .presentation-nav {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 2rem;
+          margin-top: 3rem;
+          position: relative;
+          z-index: 5;
+        }
+
+        .nav-btn {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          padding: 1rem 2rem;
+          border-radius: 50px;
+          cursor: pointer;
+          font-family: 'Cairo', sans-serif;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          backdrop-filter: blur(10px);
+          z-index: 10;
+        }
+
+        .nav-btn:hover {
+          background: var(--madina-gold);
+          color: var(--madina-dark);
+          border-color: var(--madina-gold);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .slide-counter {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          padding: 0.8rem 1.5rem;
+          border-radius: 25px;
+          font-weight: 600;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mobile-nav-hint {
+          display: none;
+          text-align: center;
+          color: white;
+          font-size: 0.9rem;
+          margin-top: 1rem;
+          opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+          .presentation-title {
+            font-size: 2rem;
+          }
+          
+          .presentation-slide {
+            padding: 2rem;
+          }
+          
+          .slide-content h3 {
+            font-size: 2rem;
+          }
+          
+          .point-item {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+          }
+          
+          .presentation-nav {
+            display: none;
+          }
+
+          .mobile-nav-hint {
+            display: block;
+          }
+        }
+
+        /* Statistics Section Styles */
+        .statistics-section {
+          padding: 6rem 0;
+          background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+          color: white;
+        }
+
+        .statistics-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 2rem;
+          text-align: center;
+        }
+
+        .statistics-title {
+          font-size: 3rem;
+          font-weight: 900;
+          margin-bottom: 1rem;
+          color: var(--madina-gold);
+        }
+
+        .statistics-subtitle {
+          font-size: 1.3rem;
+          margin-bottom: 4rem;
+          opacity: 0.9;
+        }
+
+        .statistics-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 3rem;
+          margin-top: 4rem;
+        }
+
+        .stat-card {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 3rem 2rem;
+          border-radius: 20px;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .stat-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .stat-card:hover::before {
+          left: 100%;
+        }
+
+        .stat-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+          display: block;
+        }
+
+        .stat-number {
+          font-size: 3.5rem;
+          font-weight: 900;
+          color: var(--madina-gold);
+          margin-bottom: 0.5rem;
+          display: block;
+        }
+
+        .stat-label {
+          font-size: 1.2rem;
+          opacity: 0.9;
+          margin-bottom: 1rem;
+        }
+
+        .stat-progress {
+          width: 100%;
+          height: 4px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 2px;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .stat-progress::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 0%;
+          background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+          transition: width 2s ease;
+          border-radius: 2px;
+        }
+
+        .stat-card.animate .stat-progress::after {
+          width: 100%;
+        }
+
+        @media (max-width: 768px) {
+          .statistics-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+          }
+          
+          .stat-number {
+            font-size: 2.5rem;
+          }
+        }
+
+        /* Testimonials Section Styles */
+        .testimonials-section {
+          padding: 6rem 0;
+          background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+          color: white;
+        }
+
+        .testimonials-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 2rem;
+          text-align: center;
+        }
+
+        .testimonials-title {
+          font-size: 3rem;
+          font-weight: 900;
+          margin-bottom: 1rem;
+          color: var(--madina-gold);
+        }
+
+        .testimonials-subtitle {
+          font-size: 1.3rem;
+          margin-bottom: 4rem;
+          opacity: 0.9;
+        }
+
+        .testimonials-carousel {
+          position: relative;
+          max-width: 800px;
+          margin: 0 auto;
+          overflow: hidden;
+        }
+
+        .testimonial-card {
+          display: none;
+          background: rgba(255, 255, 255, 0.1);
+          padding: 3rem;
+          border-radius: 20px;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          margin: 0 1rem;
+          transition: all 0.3s ease;
+          transform: scale(0.9);
+          opacity: 0.7;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .testimonial-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .testimonial-card:hover::before {
+          left: 100%;
+        }
+
+        .testimonial-card.active {
+          display: block;
+          transform: scale(1);
+          opacity: 1;
+        }
+
+        .testimonial-content {
+          text-align: center;
+        }
+
+        .testimonial-stars {
+          font-size: 1.5rem;
+          margin-bottom: 1.5rem;
+          color: var(--madina-gold);
+        }
+
+        .testimonial-content p {
+          font-size: 1.2rem;
+          line-height: 1.8;
+          margin-bottom: 2rem;
+          color: white;
+          font-style: italic;
+          opacity: 0.9;
+        }
+
+        .testimonial-author {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+        }
+
+        .author-avatar {
+          font-size: 2rem;
+          background: var(--madina-gold);
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .author-info h4 {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: white;
+          margin: 0;
+        }
+
+        .author-info span {
+          font-size: 0.9rem;
+          color: var(--madina-gold);
+        }
+
+        .carousel-controls {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 2rem;
+          margin-top: 3rem;
+        }
+
+        .carousel-btn {
+          background: var(--madina-green);
+          color: white;
+          border: none;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          font-size: 1.5rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .carousel-btn:hover {
+          background: var(--madina-dark);
+          transform: scale(1.1);
+        }
+
+        .carousel-dots {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #ddd;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .dot.active {
+          background: var(--madina-green);
+          transform: scale(1.2);
+        }
+
+        /* Interactive Map Section Styles */
+        .map-section {
+          padding: 6rem 0;
+          background: linear-gradient(135deg, var(--madina-dark) 0%, var(--madina-green) 100%);
+          color: white;
+        }
+
+        .map-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 2rem;
+          text-align: center;
+        }
+
+        .map-title {
+          font-size: 3rem;
+          font-weight: 900;
+          margin-bottom: 1rem;
+          color: var(--madina-gold);
+        }
+
+        .map-subtitle {
+          font-size: 1.3rem;
+          margin-bottom: 4rem;
+          opacity: 0.9;
+        }
+
+        .map-wrapper {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          gap: 3rem;
+          align-items: start;
+        }
+
+        .interactive-map {
+          height: 500px;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+          border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Custom Leaflet Popup Styles */
+        .leaflet-popup-content-wrapper {
+          background: rgba(26, 95, 58, 0.95);
+          color: white;
+          border-radius: 12px;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(10px);
+        }
+
+        .leaflet-popup-content {
+          margin: 1rem;
+          font-family: 'Cairo', sans-serif;
+          text-align: right;
+          direction: rtl;
+        }
+
+        .leaflet-popup-tip {
+          background: rgba(26, 95, 58, 0.95);
+        }
+
+        .popup-title {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: var(--madina-gold);
+          margin-bottom: 0.5rem;
+        }
+
+        .popup-description {
+          font-size: 0.9rem;
+          line-height: 1.4;
+          margin-bottom: 1rem;
+          opacity: 0.9;
+        }
+
+        .popup-distance {
+          font-size: 0.8rem;
+          color: var(--madina-gold);
+          font-weight: 600;
+        }
+
+        .popup-button {
+          background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+          color: var(--madina-dark);
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 8px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: 'Cairo', sans-serif;
+          margin-top: 0.5rem;
+          width: 100%;
+        }
+
+        /* Custom marker icons */
+        .custom-marker {
+          background: var(--madina-gold);
+          border: 3px solid white;
+          border-radius: 50%;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-marker.madina {
+          background: var(--madina-green);
+        }
+
+        .custom-marker.region {
+          background: var(--madina-gold);
+        }
+
+        .map-legend {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 2rem;
+          border-radius: 15px;
+          backdrop-filter: blur(10px);
+        }
+
+        .map-legend h3 {
+          font-size: 1.5rem;
+          margin-bottom: 1.5rem;
+          color: var(--madina-gold);
+        }
+
+        .legend-items {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 0.5rem;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        .legend-item:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-icon {
+          font-size: 1.5rem;
+        }
+
+        .map-instructions {
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .map-instructions p {
+          color: var(--madina-gold);
+          margin-bottom: 1rem;
+          font-weight: 600;
+        }
+
+        .map-instructions ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .map-instructions li {
+          color: white;
+          opacity: 0.9;
+          margin-bottom: 0.5rem;
+          padding-right: 1rem;
+          position: relative;
+        }
+
+        .map-instructions li::before {
+          content: '•';
+          color: var(--madina-gold);
+          position: absolute;
+          right: 0;
+          font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+          .map-wrapper {
+            grid-template-columns: 1fr;
+          }
+          
+          .testimonial-card {
+            padding: 2rem;
+          }
+          
+          .carousel-controls {
+            flex-direction: column;
+            gap: 1rem;
+          }
+        }
+
+        /* Famous City Regions Section Styles */
+        .famous-regions-section {
+          padding: 6rem 0;
+          background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+          color: white;
+        }
+
+        .famous-regions-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 2rem;
+          text-align: center;
+        }
+
+        .famous-regions-title {
+          font-size: 3rem;
+          font-weight: 900;
+          margin-bottom: 1rem;
+          color: var(--madina-gold);
+        }
+
+        .famous-regions-subtitle {
+          font-size: 1.3rem;
+          margin-bottom: 4rem;
+          opacity: 0.9;
+        }
+
+        .famous-regions-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+          gap: 3rem;
+          margin-top: 4rem;
+        }
+
+        .region-card {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          overflow: hidden;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.3s ease;
+          position: relative;
+        }
+
+        .region-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          transition: left 0.5s ease;
+          z-index: 1;
+        }
+
+        .region-card:hover::before {
+          left: 100%;
+        }
+
+        .region-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .region-image {
+          position: relative;
+          height: 250px;
+          overflow: hidden;
+        }
+
+        .region-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: all 0.3s ease;
+        }
+
+        .region-card:hover .region-image img {
+          transform: scale(1.1);
+        }
+
+        .region-content {
+          padding: 2rem;
+          position: relative;
+          z-index: 2;
+        }
+
+        .region-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+          display: block;
+        }
+
+        .region-card h3 {
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
+          color: var(--madina-gold);
+        }
+
+        .region-card p {
+          font-size: 1rem;
+          line-height: 1.7;
+          margin-bottom: 2rem;
+          opacity: 0.9;
+          color: white;
+        }
+
+        .region-details {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          margin-bottom: 2rem;
+          font-size: 0.9rem;
+          color: var(--madina-gold);
+        }
+
+        .region-distance,
+        .region-duration {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .region-btn {
+          background: linear-gradient(45deg, var(--madina-gold), #f4d03f);
+          color: var(--madina-dark);
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 25px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-family: 'Cairo', sans-serif;
+          width: 100%;
+        }
+
+        .region-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        @media (max-width: 768px) {
+          .famous-regions-title {
+            font-size: 2.5rem;
+          }
+          
+          .famous-regions-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+          }
+          
+          .region-content {
+            padding: 1.5rem;
+          }
+          
+          .region-details {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+          }
+        }
+
+        /* Dark Mode */
+        body.dark {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: #f4f4f4;
+      }
+
+      body.dark .features-section {
+        background: #2a2a2a;
+      }
+
+      body.dark .feature-card {
+        background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      body.dark .gallery-section {
+        background: #2a2a2a;
+      }
+
+      body.dark .contact-section {
+        background: #2a2a2a;
+      }
+
+      body.dark .contact-form input,
+      body.dark .contact-form textarea {
+        background: #3a3a3a;
+        border-color: #555;
+        color: #f4f4f4;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="main-header">
+      <div class="header-container">
+        <a href="#" class="header-logo" onclick="location.reload(); return false;">
+          <img src="image/icon website.jpg" alt="شعار المدينة المنورة" class="logo-img" />
+        </a>
+        <nav class="header-nav">
+          <a href="#problems" class="header-link" data-i18n="nav.problems">التحديات</a>
+          <a href="#presentation" class="header-link" data-i18n="nav.presentation">العرض التقديمي</a>
+          <a href="#features" class="header-link" data-i18n="nav.features">الحلول</a>
+          <a href="#prayer" class="header-link" data-i18n="nav.prayer">أوقات الصلاة</a>
+          <a href="#gallery" class="header-link" data-i18n="nav.gallery">من نخدم</a>
+          <a href="#famous-regions" class="header-link" data-i18n="nav.famous">المناطق المشهورة</a>
+          <a href="#contact" class="header-link" data-i18n="nav.contact">تواصل معنا</a>
+          <div class="header-actions">
+            <div class="language-dropdown">
+              <button id="languageToggle" class="cta-button header-cta" aria-haspopup="true" aria-expanded="false">اللغة</button>
+              <div id="languageMenu" class="language-menu" role="menu" aria-label="Language menu">
+                <button type="button" class="language-option" data-lang="ar" role="menuitem">العربية</button>
+                <button type="button" class="language-option" data-lang="en" role="menuitem">English</button>
+                <button type="button" class="language-option" data-lang="fr" role="menuitem">Français</button>
+                <button type="button" class="language-option" data-lang="zh" role="menuitem">中文</button>
+                <button type="button" class="language-option" data-lang="hi" role="menuitem">हिन्दी</button>
+                <button type="button" class="language-option" data-lang="id" role="menuitem">Bahasa Indonesia</button>
+              </div>
+            </div>
+            <a href="login.html" class="login-btn" data-i18n="buttons.login">تسجيل الدخول</a>
+            <button id="darkModeToggle" class="cta-button header-cta" data-i18n="buttons.darkMode">الوضع الليلي</button>
+          </div>
+        </nav>
+        <button class="mobile-menu-toggle" aria-label="القائمة">
+          <span class="menu-icon"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="particles"></div>
+      <div class="floating-elements">
+        <div class="floating-element">🕌</div>
+        <div class="floating-element">🌙</div>
+        <div class="floating-element">⭐</div>
+        <div class="floating-element">🕋</div>
+        <div class="floating-element">📿</div>
+      </div>
+      <div class="hero-content">
+        <h1 data-i18n="hero.title">المدينة المنورة</h1>
+        <p class="hero-subtitle" data-i18n="hero.subtitle">مدينة رسول الله ﷺ</p>
+        <p class="hero-description" data-i18n="hero.description">
+          اكتشف المدينة المنورة، ثاني أقدس مدينة في الإسلام، وموطن المسجد النبوي الشريف. 
+          استمتع برحلتك الروحانية في هذه المدينة المباركة التي تحتضن تاريخ الإسلام العظيم.
+        </p>
+        <div class="hero-buttons">
+          <a href="travel-schedule.html" class="cta-button primary" data-i18n="hero.start">
+            🗺️ ابدأ رحلتك
+          </a>
+          <button class="cta-button secondary" data-i18n="hero.download">
+            📱 تحميل التطبيق
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Presentation Section -->
+    <section id="presentation" class="presentation-section">
+      <div class="presentation-container">
+        <h2 class="presentation-title" data-i18n="presentation.title">مشروعنا</h2>
+        <p class="presentation-subtitle" data-i18n="presentation.subtitle">اكتشف مشروعنا بالتفصيل</p>
+        
+        <div class="presentation-slides">
+          <!-- Slide 1: المشكلة -->
+          <div class="presentation-slide active" id="slide1">
+            <div class="slide-content">
+              <h3 data-i18n="presentation.slide1.title">التحديات التي يواجهها الزائر في المدينة المنورة</h3>
+              <div class="slide-points">
+                <div class="point-item">
+                  <span class="point-icon">🏨</span>
+                  <span class="point-text" data-i18n="presentation.slide1.items.0">صعوبة إيجاد سكن مرخّص قريب من الخدمات</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">📱</span>
+                  <span class="point-text" data-i18n="presentation.slide1.items.1">نقص المعلومات عن الأنشطة السياحية والدينية والثقافية</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">📍</span>
+                  <span class="point-text" data-i18n="presentation.slide1.items.2">عدم توفر وسيلة للتواصل الفوري مع خدمات مساندة (مغسلة، بقالة، عامل)</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🏥</span>
+                  <span class="point-text" data-i18n="presentation.slide1.items.3">غياب حلول مخصصة للسياحة العلاجية للمرضى والزوار</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2: الحل -->
+          <div class="presentation-slide" id="slide2">
+            <div class="slide-content">
+              <h3 data-i18n="presentation.slide2.title">حل متكامل للزوار</h3>
+              <div class="slide-points">
+                <div class="point-item">
+                  <span class="point-icon">✅</span>
+                  <span class="point-text" data-i18n="presentation.slide2.items.0">عرض جميع أماكن الإقامة المرخصة مع خاصية تأكيد الترخيص</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">📋</span>
+                  <span class="point-text" data-i18n="presentation.slide2.items.1">تقديم قائمة بالأنشطة (دينية، ثقافية، علاجية) مع الحجز الفوري</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🗺️</span>
+                  <span class="point-text" data-i18n="presentation.slide2.items.2">ميزة "المواقع القريبة منك" لعرض: مغسلة، بقالة، عامل، خدمات طبية</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">👨‍💼</span>
+                  <span class="point-text" data-i18n="presentation.slide2.items.3">إرشاد سياحي رقمي مع إمكانية حجز مرشدين معتمدين</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3: لماذا المدينة المنورة -->
+          <div class="presentation-slide" id="slide3">
+            <div class="slide-content">
+              <h3 data-i18n="presentation.slide3.title">المدينة المنورة… قلب الضيافة الإسلامية</h3>
+              <div class="slide-points">
+                <div class="point-item">
+                  <span class="point-icon">🕌</span>
+                  <span class="point-text" data-i18n="presentation.slide3.items.0">ثاني أقدس مدينة في الإسلام وتستقبل ملايين الحجاج والمعتمرين سنويًا</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🏥</span>
+                  <span class="point-text" data-i18n="presentation.slide3.items.1">وجهة متنامية للسياحة العلاجية بفضل مرافقها الطبية المتقدمة</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🏛️</span>
+                  <span class="point-text" data-i18n="presentation.slide3.items.2">تنوع في المزارات التاريخية والمزارع والأسواق التراثية</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">📈</span>
+                  <span class="point-text" data-i18n="presentation.slide3.items.3">نمو مستمر في قطاع الضيافة بدعم من رؤية 2030</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4: مزايا التطبيق -->
+          <div class="presentation-slide" id="slide4">
+            <div class="slide-content">
+              <h3 data-i18n="presentation.slide4.title">مزايا تجعل رحلتك أسهل</h3>
+              <div class="slide-points">
+                <div class="point-item">
+                  <span class="point-icon">🔒</span>
+                  <span class="point-text" data-i18n="presentation.slide4.items.0">تأكيد الترخيص لكل عقار قبل الحجز</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">📍</span>
+                  <span class="point-text" data-i18n="presentation.slide4.items.1">عرض جميع الخدمات القريبة من موقع إقامتك</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">📅</span>
+                  <span class="point-text" data-i18n="presentation.slide4.items.2">تصميم جدول سياحي مخصص حسب اهتماماتك</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🌐</span>
+                  <span class="point-text" data-i18n="presentation.slide4.items.3">واجهة سهلة الاستخدام بعدة لغات</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🗺️</span>
+                  <span class="point-text" data-i18n="presentation.slide4.items.4">تكامل مع الخرائط والجهات الرسمية</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 5: من نخدم -->
+          <div class="presentation-slide" id="slide5">
+            <div class="slide-content">
+              <h3 data-i18n="presentation.slide5.title">من نخدم؟</h3>
+              <div class="slide-points">
+                <div class="point-item">
+                  <span class="point-icon">🕋</span>
+                  <span class="point-text" data-i18n="presentation.slide5.items.0">الحجاج والمعتمرون</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">✈️</span>
+                  <span class="point-text" data-i18n="presentation.slide5.items.1">الزوار السياحيون من داخل وخارج المملكة</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🏥</span>
+                  <span class="point-text" data-i18n="presentation.slide5.items.2">المرضى في برامج السياحة العلاجية</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">👨‍👩‍👧‍👦</span>
+                  <span class="point-text" data-i18n="presentation.slide5.items.3">العوائل الباحثة عن إقامة مريحة وخدمات قريبة</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 6: الأثر المتوقع -->
+          <div class="presentation-slide" id="slide6">
+            <div class="slide-content">
+              <h3 data-i18n="presentation.slide6.title">أثرنا على المدينة والزائر</h3>
+              <div class="slide-points">
+                <div class="point-item">
+                  <span class="point-icon">📊</span>
+                  <span class="point-text" data-i18n="presentation.slide6.items.0">زيادة نسبة إشغال الفنادق المرخصة</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">⭐</span>
+                  <span class="point-text" data-i18n="presentation.slide6.items.1">رفع جودة تجربة الزائر وتحسين انطباعه</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">💰</span>
+                  <span class="point-text" data-i18n="presentation.slide6.items.2">دعم الاقتصاد المحلي عبر زيادة الطلب على الخدمات</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🏆</span>
+                  <span class="point-text" data-i18n="presentation.slide6.items.3">تعزيز مكانة المدينة المنورة كمركز للضيافة المتميزة</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 7: شراكتنا مع الصندوق -->
+          <div class="presentation-slide" id="slide7">
+            <div class="slide-content">
+              <h3 data-i18n="presentation.slide7.title">شراكتنا مع صندوق التنمية السياحي</h3>
+              <div class="slide-points">
+                <div class="point-item">
+                  <span class="point-icon">💻</span>
+                  <span class="point-text" data-i18n="presentation.slide7.items.0">تمويل لتوسيع قاعدة البيانات وتطوير التقنية</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🤝</span>
+                  <span class="point-text" data-i18n="presentation.slide7.items.1">شراكات مع الفنادق والمرافق السياحية</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">📢</span>
+                  <span class="point-text" data-i18n="presentation.slide7.items.2">دعم تسويقي للوصول إلى أكبر شريحة من الزوار</span>
+                </div>
+                <div class="point-item">
+                  <span class="point-icon">🎯</span>
+                  <span class="point-text" data-i18n="presentation.slide7.items.3">مواءمة المشروع مع مبادرات رؤية 2030</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="presentation-nav">
+          <button class="nav-btn prev-btn" onclick="prevSlide()" data-i18n="presentation.prev">السابق</button>
+          <span class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">7</span>
+          </span>
+          <button class="nav-btn next-btn" onclick="nextSlide()" data-i18n="presentation.next">التالي</button>
+        </div>
+        <div class="mobile-nav-hint" data-i18n="presentation.swipeHint">اسحب لليمين أو اليسار للتنقل</div>
+      </div>
+    </section>
+
+    <!-- Live Statistics Section -->
+    <section id="statistics" class="statistics-section">
+      <div class="statistics-container">
+        <h2 class="statistics-title" data-i18n="statistics.title">إحصائيات حية</h2>
+        <p class="statistics-subtitle" data-i18n="statistics.subtitle">أرقام تتحدث عن نفسها</p>
+        
+        <div class="statistics-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🕌</div>
+            <div class="stat-number" data-target="15000000">0</div>
+            <div class="stat-label" data-i18n="statistics.labels.visitors">زائر سنوياً</div>
+            <div class="stat-progress"></div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">🏨</div>
+            <div class="stat-number" data-target="500">0</div>
+            <div class="stat-label" data-i18n="statistics.labels.hotels">فندق مرخص</div>
+            <div class="stat-progress"></div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-number" data-target="98">0</div>
+            <div class="stat-label" data-i18n="statistics.labels.satisfaction">% رضا الزوار</div>
+            <div class="stat-progress"></div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">🌍</div>
+            <div class="stat-number" data-target="180">0</div>
+            <div class="stat-label" data-i18n="statistics.labels.nationalities">جنسية مختلفة</div>
+            <div class="stat-progress"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <div class="features-container">
+        <h2 class="features-title" data-i18n="features.title">مشروعنا</h2>
+        <p class="features-subtitle" data-i18n="features.subtitle">اكتشف ما يجعل المدينة المنورة وجهة روحانية فريدة</p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🕌</div>
+            <h3 data-i18n="features.masjid.title">المسجد النبوي الشريف</h3>
+            <p data-i18n="features.masjid.desc">أحد أقدس المساجد في الإسلام، حيث صلى النبي ﷺ ودفن فيه. يتميز بقبته الخضراء الشهيرة والروضة المباركة.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📖</div>
+            <h3 data-i18n="features.historical.title">المواقع التاريخية</h3>
+            <p data-i18n="features.historical.desc">اكتشف المواقع التاريخية العديدة مثل مسجد قباء، جبل أحد، مسجد القبلتين، وغيرها من المعالم الإسلامية المهمة.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🌿</div>
+            <h3 data-i18n="features.nature.title">الطبيعة الخلابة</h3>
+            <p data-i18n="features.nature.desc">استمتع بالطبيعة الجميلة للمدينة المنورة مع الجبال الخضراء والواحات المزدهرة والمناخ المعتدل على مدار العام.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🛏️</div>
+            <h3 data-i18n="features.stay.title">الإقامة المميزة</h3>
+            <p data-i18n="features.stay.desc">اختر من بين مجموعة واسعة من الفنادق والمنتجعات الفاخرة القريبة من المسجد النبوي الشريف.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🍽️</div>
+            <h3 data-i18n="features.food.title">المأكولات المحلية</h3>
+            <p data-i18n="features.food.desc">تذوق أشهى الأطباق المحلية والمأكولات التقليدية التي تشتهر بها المدينة المنورة.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">👨‍💼</div>
+            <h3 data-i18n="features.guides.title">المرشدين المحترفين</h3>
+            <p data-i18n="features.guides.desc">استفد من خبرة المرشدين السياحيين المحترفين الذين يعرفون كل تفاصيل المدينة المنورة.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prayer Times Section -->
+    <section id="prayer" class="prayer-section">
+      <div class="prayer-container">
+        <h2 class="prayer-title" data-i18n="prayer.title">أوقات الصلاة</h2>
+        <p class="prayer-subtitle" data-i18n="prayer.subtitle">أوقات الصلاة في المدينة المنورة اليوم</p>
+        <div class="prayer-grid">
+          <div class="prayer-card">
+            <div class="prayer-name" data-i18n="prayer.names.fajr">الفجر</div>
+            <div class="prayer-time" id="fajr-time">04:30</div>
+          </div>
+          <div class="prayer-card">
+            <div class="prayer-name" data-i18n="prayer.names.dhuhr">الظهر</div>
+            <div class="prayer-time" id="dhuhr-time">12:15</div>
+          </div>
+          <div class="prayer-card">
+            <div class="prayer-name" data-i18n="prayer.names.asr">العصر</div>
+            <div class="prayer-time" id="asr-time">15:45</div>
+          </div>
+          <div class="prayer-card">
+            <div class="prayer-name" data-i18n="prayer.names.maghrib">المغرب</div>
+            <div class="prayer-time" id="maghrib-time">18:30</div>
+          </div>
+          <div class="prayer-card">
+            <div class="prayer-name" data-i18n="prayer.names.isha">العشاء</div>
+            <div class="prayer-time" id="isha-time">20:00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery-section">
+      <div class="gallery-container">
+        <h2 class="gallery-title" data-i18n="gallery.title">معالم المدينة المنورة</h2>
+        <p class="gallery-subtitle" data-i18n="gallery.subtitle">اكتشف أجمل معالم المدينة المنورة</p>
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <div class="gallery-icon">🕌</div>
+            <div class="gallery-caption" data-i18n="gallery.items.0">المسجد النبوي الشريف</div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-icon">🕌</div>
+            <div class="gallery-caption" data-i18n="gallery.items.1">مسجد قباء</div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-icon">⛰️</div>
+            <div class="gallery-caption" data-i18n="gallery.items.2">جبل أحد</div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-icon">🕌</div>
+            <div class="gallery-caption" data-i18n="gallery.items.3">مسجد القبلتين</div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-icon">🌿</div>
+            <div class="gallery-caption" data-i18n="gallery.items.4">الطبيعة الخلابة للمدينة</div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-icon">🕌</div>
+            <div class="gallery-caption" data-i18n="gallery.items.5">مسجد قباء من الداخل</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Activities Section -->
+    <section id="activities" class="activities-section">
+      <div class="activities-container">
+        <h2 class="activities-title" data-i18n="activities.title">فعاليات المدينة المنورة</h2>
+        <p class="activities-subtitle" data-i18n="activities.subtitle">اكتشف الأنشطة والفعاليات المميزة في المدينة المنورة</p>
+        
+        <div class="activities-grid">
+          <div class="activity-card">
+            <div class="activity-icon">🕌</div>
+            <h3 data-i18n="activities.cards.0.title">الزيارات الدينية</h3>
+            <p data-i18n="activities.cards.0.desc">زيارة المسجد النبوي الشريف، مسجد قباء، مسجد القبلتين، وجبل أحد. جولات إرشادية مع مرشدين معتمدين.</p>
+            <div class="activity-details">
+              <span class="activity-time" data-i18n="activities.cards.0.time">⏰ 2-4 ساعات</span>
+              <span class="activity-price" data-i18n="activities.cards.0.price">💰 من 50 ريال</span>
+            </div>
+            <button class="activity-btn" data-i18n="activities.cards.0.button">احجز الآن</button>
+          </div>
+          
+          <div class="activity-card">
+            <div class="activity-icon">🏛️</div>
+            <h3 data-i18n="activities.cards.1.title">الجولات التاريخية</h3>
+            <p data-i18n="activities.cards.1.desc">اكتشف المواقع التاريخية الإسلامية، المتاحف، والأسواق التراثية. تعرف على تاريخ المدينة العريق.</p>
+            <div class="activity-details">
+              <span class="activity-time" data-i18n="activities.cards.1.time">⏰ 3-5 ساعات</span>
+              <span class="activity-price" data-i18n="activities.cards.1.price">💰 من 80 ريال</span>
+            </div>
+            <button class="activity-btn" data-i18n="activities.cards.1.button">احجز الآن</button>
+          </div>
+          
+          <div class="activity-card">
+            <div class="activity-icon">🌿</div>
+            <h3 data-i18n="activities.cards.2.title">جولات الطبيعة</h3>
+            <p data-i18n="activities.cards.2.desc">استمتع بالطبيعة الخلابة للمدينة المنورة. زيارات للمزارع، الواحات، والمناطق الجبلية الجميلة.</p>
+            <div class="activity-details">
+              <span class="activity-time" data-i18n="activities.cards.2.time">⏰ 4-6 ساعات</span>
+              <span class="activity-price" data-i18n="activities.cards.2.price">💰 من 120 ريال</span>
+            </div>
+            <button class="activity-btn" data-i18n="activities.cards.2.button">احجز الآن</button>
+          </div>
+          
+          <div class="activity-card">
+            <div class="activity-icon">🛍️</div>
+            <h3 data-i18n="activities.cards.3.title">جولات التسوق</h3>
+            <p data-i18n="activities.cards.3.desc">اكتشف الأسواق التقليدية والمراكز التجارية الحديثة. تسوق التمور، العطور، والهدايا التذكارية.</p>
+            <div class="activity-details">
+              <span class="activity-time" data-i18n="activities.cards.3.time">⏰ 2-3 ساعات</span>
+              <span class="activity-price" data-i18n="activities.cards.3.price">💰 من 30 ريال</span>
+            </div>
+            <button class="activity-btn" data-i18n="activities.cards.3.button">احجز الآن</button>
+          </div>
+          
+          <div class="activity-card">
+            <div class="activity-icon">🍽️</div>
+            <h3 data-i18n="activities.cards.4.title">جولات الطعام</h3>
+            <p data-i18n="activities.cards.4.desc">تذوق أشهى المأكولات المحلية والمطاعم التقليدية. تعرف على المطبخ المحلي وأشهر الأطباق.</p>
+            <div class="activity-details">
+              <span class="activity-time" data-i18n="activities.cards.4.time">⏰ 2-4 ساعات</span>
+              <span class="activity-price" data-i18n="activities.cards.4.price">💰 من 100 ريال</span>
+            </div>
+            <button class="activity-btn" data-i18n="activities.cards.4.button">احجز الآن</button>
+          </div>
+          
+          <div class="activity-card">
+            <div class="activity-icon">🏥</div>
+            <h3 data-i18n="activities.cards.5.title">السياحة العلاجية</h3>
+            <p data-i18n="activities.cards.5.desc">زيارة المراكز الطبية المتخصصة، المنتجعات الصحية، والمرافق العلاجية المميزة في المدينة.</p>
+            <div class="activity-details">
+              <span class="activity-time" data-i18n="activities.cards.5.time">⏰ 1-3 أيام</span>
+              <span class="activity-price" data-i18n="activities.cards.5.price">💰 من 500 ريال</span>
+            </div>
+            <button class="activity-btn" data-i18n="activities.cards.5.button">احجز الآن</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Famous City Regions Section -->
+    <section id="famous-regions" class="famous-regions-section">
+      <div class="famous-regions-container">
+        <h2 class="famous-regions-title" data-i18n="famous.title">الواجهة الخارجية مناطق المدينة المشهورة</h2>
+        <p class="famous-regions-subtitle" data-i18n="famous.subtitle">اكتشف أشهر المناطق والمدن القريبة من المدينة المنورة</p>
+        
+        <div class="famous-regions-grid">
+          <div class="region-card">
+            <div class="region-image">
+              <img src="image/al ula/1968706-486009869.jpg" alt="العلا" loading="lazy">
+            </div>
+            <div class="region-content">
+              <div class="region-icon">🏛️</div>
+              <h3 data-i18n="famous.cards.0.title">العلا</h3>
+              <p data-i18n="famous.cards.0.desc">مدينة التاريخ والآثار، تضم مدائن صالح وقلعة العلا ومعالم تاريخية أخرى تعود لآلاف السنين</p>
+              <div class="region-details">
+                <span class="region-distance" data-i18n="famous.cards.0.distance">📍 350 كم من المدينة المنورة</span>
+                <span class="region-duration" data-i18n="famous.cards.0.duration">⏰ 4 ساعات بالسيارة</span>
+              </div>
+              <button class="region-btn" data-i18n="famous.cards.0.button">اكتشف العلا</button>
+            </div>
+          </div>
+          
+          <div class="region-card">
+            <div class="region-image">
+              <img src="image/yanbu/3224826-159324220.jpg" alt="ينبع" loading="lazy">
+            </div>
+            <div class="region-content">
+              <div class="region-icon">🌊</div>
+              <h3 data-i18n="famous.cards.1.title">ينبع</h3>
+              <p data-i18n="famous.cards.1.desc">لؤلؤة البحر الأحمر، تشتهر بشواطئها الجميلة ومناظرها الطبيعية الخلابة والأنشطة البحرية المتنوعة</p>
+              <div class="region-details">
+                <span class="region-distance" data-i18n="famous.cards.1.distance">📍 220 كم من المدينة المنورة</span>
+                <span class="region-duration" data-i18n="famous.cards.1.duration">⏰ 2.5 ساعة بالسيارة</span>
+              </div>
+              <button class="region-btn" data-i18n="famous.cards.1.button">اكتشف ينبع</button>
+            </div>
+          </div>
+          
+          <div class="region-card">
+            <div class="region-image">
+              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="بدر" loading="lazy">
+            </div>
+            <div class="region-content">
+              <div class="region-icon">⚔️</div>
+              <h3 data-i18n="famous.cards.2.title">بدر</h3>
+              <p data-i18n="famous.cards.2.desc">موقع غزوة بدر الكبرى، المعركة الفاصلة في التاريخ الإسلامي، تضم متحف بدر ومعالم تاريخية مهمة</p>
+              <div class="region-details">
+                <span class="region-distance" data-i18n="famous.cards.2.distance">📍 150 كم من المدينة المنورة</span>
+                <span class="region-duration" data-i18n="famous.cards.2.duration">⏰ 2 ساعة بالسيارة</span>
+              </div>
+              <button class="region-btn" data-i18n="famous.cards.2.button">اكتشف بدر</button>
+            </div>
+          </div>
+          
+          <div class="region-card">
+            <div class="region-image">
+              <img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="خيبر" loading="lazy">
+            </div>
+            <div class="region-content">
+              <div class="region-icon">🏰</div>
+              <h3 data-i18n="famous.cards.3.title">خيبر</h3>
+              <p data-i18n="famous.cards.3.desc">واحة خيبر التاريخية، موقع فتح خيبر في عهد النبي ﷺ، تشتهر بحصونها القديمة ونخيلها الكثيف</p>
+              <div class="region-details">
+                <span class="region-distance" data-i18n="famous.cards.3.distance">📍 170 كم من المدينة المنورة</span>
+                <span class="region-duration" data-i18n="famous.cards.3.duration">⏰ 2.5 ساعة بالسيارة</span>
+              </div>
+              <button class="region-btn" data-i18n="famous.cards.3.button">اكتشف خيبر</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials-section">
+      <div class="testimonials-container">
+        <h2 class="testimonials-title" data-i18n="testimonials.title">آراء الزوار</h2>
+        <p class="testimonials-subtitle" data-i18n="testimonials.subtitle">تجارب حقيقية من زوار المدينة المنورة</p>
+        
+        <div class="testimonials-carousel">
+          <div class="testimonial-card active">
+            <div class="testimonial-content">
+              <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+              <p>"تجربة رائعة! وجدت سكن مرخص بسهولة وكان قريب من المسجد النبوي. الخدمات كانت ممتازة والتطبيق سهل الاستخدام."</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">👤</div>
+                <div class="author-info">
+                  <h4>أحمد محمد</h4>
+                  <span>زائر من مصر</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+              <p>"أفضل تطبيق للسياحة في المدينة المنورة. ساعدني في تخطيط رحلتي بالكامل وحجز جميع الخدمات."</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">👤</div>
+                <div class="author-info">
+                  <h4>فاطمة علي</h4>
+                  <span>زائرة من الإمارات</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+              <p>"خدمة ممتازة للسياحة العلاجية. وجدت جميع المرافق الطبية التي أحتاجها وكان التطبيق مفيد جداً."</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">👤</div>
+                <div class="author-info">
+                  <h4>عبدالله خالد</h4>
+                  <span>زائر من الكويت</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="carousel-controls">
+          <button class="carousel-btn prev-btn" onclick="prevTestimonial()">‹</button>
+          <div class="carousel-dots">
+            <span class="dot active" onclick="goToTestimonial(0)"></span>
+            <span class="dot" onclick="goToTestimonial(1)"></span>
+            <span class="dot" onclick="goToTestimonial(2)"></span>
+          </div>
+          <button class="carousel-btn next-btn" onclick="nextTestimonial()">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Map Section -->
+    <section id="map" class="map-section">
+      <div class="map-container">
+        <h2 class="map-title" data-i18n="map.title">خريطة تفاعلية</h2>
+        <p class="map-subtitle" data-i18n="map.subtitle">اكتشف أهم المعالم والخدمات في المدينة المنورة</p>
+        
+        <div class="map-wrapper">
+          <div id="interactive-map" class="interactive-map"></div>
+          
+          <div class="map-legend">
+            <h3 data-i18n="map.legend.title">المواقع على الخريطة</h3>
+            <div class="legend-items">
+              <div class="legend-item">
+                <span class="legend-icon">🕌</span>
+                <span data-i18n="map.legend.items.0">المدينة المنورة</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-icon">🏛️</span>
+                <span data-i18n="map.legend.items.1">العلا - الآثار النبطية</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-icon">🌊</span>
+                <span data-i18n="map.legend.items.2">ينبع - البحر الأحمر</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-icon">⚔️</span>
+                <span data-i18n="map.legend.items.3">بدر - المعركة التاريخية</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-icon">🏰</span>
+                <span data-i18n="map.legend.items.4">خيبر - الواحة التاريخية</span>
+              </div>
+            </div>
+            <div class="map-instructions">
+              <p><strong data-i18n="map.legend.instructions.title">تعليمات:</strong></p>
+              <ul>
+                <li data-i18n="map.legend.instructions.items.0">انقر على أي علامة لعرض التفاصيل</li>
+                <li data-i18n="map.legend.instructions.items.1">استخدم عجلة الماوس للتكبير والتصغير</li>
+                <li data-i18n="map.legend.instructions.items.2">اسحب الخريطة للتنقل</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+      <div class="contact-container">
+        <h2 class="contact-title" data-i18n="contact.title">تواصل معنا</h2>
+        <p class="contact-subtitle" data-i18n="contact.subtitle">لأي استفسار حول رحلتك إلى المدينة المنورة</p>
+        <form class="contact-form">
+          <input type="text" data-i18n="contact.form.name" placeholder="الاسم الكامل" required>
+          <input type="email" data-i18n="contact.form.email" placeholder="البريد الإلكتروني" required>
+          <input type="tel" data-i18n="contact.form.phone" placeholder="رقم الهاتف">
+          <textarea data-i18n="contact.form.message" placeholder="رسالتك" required></textarea>
+          <button type="submit" data-i18n="contact.form.submit">إرسال الرسالة</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-logo">المدينة المنورة</div>
+        <p class="footer-description">
+          اكتشف المدينة المنورة، ثاني أقدس مدينة في الإسلام، وموطن المسجد النبوي الشريف. 
+          نقدم لك أفضل الخدمات السياحية والروحانية.
+        </p>
+        <div class="footer-links">
+          <a href="#features" class="footer-link">المميزات</a>
+          <a href="#prayer" class="footer-link">أوقات الصلاة</a>
+          <a href="#gallery" class="footer-link">المعالم</a>
+          <a href="#contact" class="footer-link">تواصل معنا</a>
+          <a href="login.html" class="footer-link">تسجيل الدخول</a>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2025 المدينة المنورة. جميع الحقوق محفوظة.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" aria-label="العودة للأعلى">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 19V5M5 12l7-7 7 7"/>
+      </svg>
+    </button>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay"></div>
+
+    <script src="script.js"></script>
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
+    <script>
+      // Dark mode toggle
+      const darkToggle = document.getElementById('darkModeToggle');
+      const body = document.body;
+      if (darkToggle) {
+        darkToggle.onclick = function() {
+          body.classList.toggle('dark');
+          if (body.classList.contains('dark')) {
+            darkToggle.textContent = 'وضع النهار';
+          } else {
+            darkToggle.textContent = 'الوضع الليلي';
+          }
+        };
+      }
+
+      // Mobile menu functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        // Avoid double-binding: primary handler is in script.js
+        if (window.__menuManaged) return;
+        const menuToggle = document.querySelector('.mobile-menu-toggle');
+        const headerNav = document.querySelector('.header-nav');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const body = document.body;
+        if (menuToggle && headerNav && menuOverlay) {
+          menuToggle.addEventListener('click', function() {
+            headerNav.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+            body.style.overflow = headerNav.classList.contains('active') ? 'hidden' : '';
+          });
+          menuOverlay.addEventListener('click', function() {
+            headerNav.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            menuToggle.classList.remove('active');
+            body.style.overflow = '';
+          });
+          const navLinks = headerNav.querySelectorAll('.header-link');
+          navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+              headerNav.classList.remove('active');
+              menuOverlay.classList.remove('active');
+              menuToggle.classList.remove('active');
+              body.style.overflow = '';
+            });
+          });
+        }
+      });
+
+      // Back to top button functionality
+      const backToTop = document.querySelector('.back-to-top');
+      if (backToTop) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 100) {
+            backToTop.classList.add('show');
+          } else {
+            backToTop.classList.remove('show');
+          }
+        });
+
+        backToTop.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+
+      // Prayer times update (simulated)
+      function updatePrayerTimes() {
+        const now = new Date();
+        const fajr = new Date(now);
+        fajr.setHours(4, 30, 0);
+        
+        const dhuhr = new Date(now);
+        dhuhr.setHours(12, 15, 0);
+        
+        const asr = new Date(now);
+        asr.setHours(15, 45, 0);
+        
+        const maghrib = new Date(now);
+        maghrib.setHours(18, 30, 0);
+        
+        const isha = new Date(now);
+        isha.setHours(20, 0, 0);
+
+        document.getElementById('fajr-time').textContent = fajr.toLocaleTimeString('ar-SA', {hour: '2-digit', minute: '2-digit'});
+        document.getElementById('dhuhr-time').textContent = dhuhr.toLocaleTimeString('ar-SA', {hour: '2-digit', minute: '2-digit'});
+        document.getElementById('asr-time').textContent = asr.toLocaleTimeString('ar-SA', {hour: '2-digit', minute: '2-digit'});
+        document.getElementById('maghrib-time').textContent = maghrib.toLocaleTimeString('ar-SA', {hour: '2-digit', minute: '2-digit'});
+        document.getElementById('isha-time').textContent = isha.toLocaleTimeString('ar-SA', {hour: '2-digit', minute: '2-digit'});
+      }
+
+      // Update prayer times on load
+      updatePrayerTimes();
+
+
+
+      // Animated Counters
+      function formatCompactNumber(value) {
+        if (value >= 1_000_000_000) return (value / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+        if (value >= 1_000_000) return (value / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+        if (value >= 1_000) return (value / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
+        return value.toString();
+      }
+
+      function animateCounter(element, target, duration = 2000) {
+        let start = 0;
+        const increment = Math.max(1, target / (duration / 16));
+
+        function updateCounter() {
+          start += increment;
+          if (start < target) {
+            const current = Math.floor(start);
+            element.textContent = formatCompactNumber(current);
+            requestAnimationFrame(updateCounter);
+          } else {
+            element.textContent = formatCompactNumber(target);
+          }
+        }
+
+        updateCounter();
+      }
+
+      // Intersection Observer for Statistics
+      const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -100px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const statCards = entry.target.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+              setTimeout(() => {
+                card.classList.add('animate');
+                const numberElement = card.querySelector('.stat-number');
+                const target = parseInt(numberElement.getAttribute('data-target'));
+                animateCounter(numberElement, target);
+              }, index * 200);
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // Observe statistics section
+      const statisticsSection = document.querySelector('.statistics-section');
+      if (statisticsSection) {
+        observer.observe(statisticsSection);
+      }
+
+      // Particle System
+      function createParticles() {
+        const particlesContainer = document.querySelector('.particles');
+        if (!particlesContainer) return;
+
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.animationDelay = Math.random() * 15 + 's';
+          particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Initialize particles
+      createParticles();
+
+      // Parallax Effect for Floating Elements
+      document.addEventListener('mousemove', (e) => {
+        const floatingElements = document.querySelectorAll('.floating-element');
+        const mouseX = e.clientX / window.innerWidth;
+        const mouseY = e.clientY / window.innerHeight;
+
+        floatingElements.forEach((element, index) => {
+          const speed = (index + 1) * 0.5;
+          const x = (mouseX - 0.5) * speed * 20;
+          const y = (mouseY - 0.5) * speed * 20;
+          element.style.transform = `translate(${x}px, ${y}px)`;
+        });
+      });
+
+      // Enhanced Scroll Animations
+      function animateOnScroll() {
+        const elements = document.querySelectorAll('.feature-card, .stat-card');
+        
+        const scrollObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, { threshold: 0.1 });
+
+        elements.forEach(element => {
+          element.style.opacity = '0';
+          element.style.transform = 'translateY(30px)';
+          element.style.transition = 'all 0.6s ease';
+          scrollObserver.observe(element);
+        });
+      }
+
+      // Initialize scroll animations
+      animateOnScroll();
+
+      // Testimonials Carousel
+      let currentTestimonial = 0;
+      const testimonials = document.querySelectorAll('.testimonial-card');
+      const dots = document.querySelectorAll('.dot');
+
+      function showTestimonial(index) {
+        testimonials.forEach((testimonial, i) => {
+          testimonial.classList.toggle('active', i === index);
+        });
+        
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+        
+        currentTestimonial = index;
+      }
+
+      function nextTestimonial() {
+        const next = (currentTestimonial + 1) % testimonials.length;
+        showTestimonial(next);
+      }
+
+      function prevTestimonial() {
+        const prev = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+        showTestimonial(prev);
+      }
+
+      function goToTestimonial(index) {
+        showTestimonial(index);
+      }
+
+      // Auto-rotate testimonials
+      setInterval(nextTestimonial, 5000);
+
+      // Interactive Map Animations
+      const mapPoints = document.querySelectorAll('.map-point');
+      
+      mapPoints.forEach(point => {
+        point.addEventListener('mouseenter', () => {
+          point.style.transform = 'scale(1.1)';
+        });
+        
+        point.addEventListener('mouseleave', () => {
+          point.style.transform = 'scale(1)';
+        });
+        
+        point.addEventListener('click', () => {
+          const location = point.getAttribute('data-location');
+          showMapModal(location);
+        });
+      });
+
+      function showMapModal(location) {
+        // Create modal for map point details
+        const modal = document.createElement('div');
+        modal.className = 'map-modal';
+        modal.innerHTML = `
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>${location}</h3>
+              <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">×</button>
+            </div>
+            <div class="modal-body">
+              <p>معلومات تفصيلية عن ${location}</p>
+              <div class="modal-actions">
+                <button class="modal-btn">احجز جولة</button>
+                <button class="modal-btn">احصل على الاتجاهات</button>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add modal styles
+        const style = document.createElement('style');
+        style.textContent = `
+          .map-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+          }
+          
+          .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+          }
+          
+          .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+          }
+          
+          .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+          }
+          
+          .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+          }
+          
+          .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--madina-green);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+          
+          .modal-btn:hover {
+            background: var(--madina-dark);
+          }
+          
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          
+          @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+          }
+        `;
+        
+        document.head.appendChild(style);
+      }
+
+      // Enhanced Loading Animation
+      function addLoadingAnimation() {
+        const loader = document.createElement('div');
+        loader.className = 'page-loader';
+        loader.innerHTML = `
+          <div class="loader-content">
+            <div class="loader-icon">🕌</div>
+            <div class="loader-text">طيبة ترحب بكم</div>
+            <div class="loader-bar">
+              <div class="loader-progress"></div>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(loader);
+        
+        // Add loader styles
+        const loaderStyle = document.createElement('style');
+        loaderStyle.textContent = `
+          .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--madina-green) 0%, var(--madina-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 0.5s ease 2s forwards;
+          }
+          
+          .loader-content {
+            text-align: center;
+            color: white;
+          }
+          
+          .loader-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 1.5s ease-in-out infinite;
+          }
+          
+          .loader-text {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+          }
+          
+          .loader-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+          }
+          
+          .loader-progress {
+            height: 100%;
+            background: var(--madina-gold);
+            border-radius: 2px;
+            animation: progress 2s ease forwards;
+          }
+          
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+          }
+          
+          @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+          }
+          
+          @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+          }
+        `;
+        
+        document.head.appendChild(loaderStyle);
+        
+        // Remove loader after animation
+        setTimeout(() => {
+          if (loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+          }
+        }, 2500);
+      }
+
+      // Initialize loading animation
+      window.addEventListener('load', addLoadingAnimation);
+
+      // Presentation Navigation
+      let currentSlide = 1;
+      const totalSlides = 7;
+
+      function showSlide(slideNumber) {
+        // Hide all slides
+        document.querySelectorAll('.presentation-slide').forEach(slide => {
+          slide.classList.remove('active');
+        });
+
+        // Show current slide
+        document.getElementById(`slide${slideNumber}`).classList.add('active');
+
+        // Update counter
+        document.getElementById('currentSlide').textContent = slideNumber;
+        document.getElementById('totalSlides').textContent = totalSlides;
+      }
+
+      function nextSlide() {
+        if (currentSlide < totalSlides) {
+          currentSlide++;
+          showSlide(currentSlide);
+        }
+      }
+
+      function prevSlide() {
+        if (currentSlide > 1) {
+          currentSlide--;
+          showSlide(currentSlide);
+        }
+      }
+
+      // Auto-rotate slides
+      setInterval(nextSlide, 8000);
+
+              // Initialize presentation
+        showSlide(1);
+
+        // Add touch/swipe functionality for mobile
+        const presentationSlides = document.querySelector('.presentation-slides');
+        
+        if (presentationSlides) {
+          let touchStartX = 0;
+          let touchEndX = 0;
+          
+          // Touch events for mobile
+          presentationSlides.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+          });
+          
+          presentationSlides.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+          });
+          
+          // Click events for mobile (fallback)
+          presentationSlides.addEventListener('click', function(e) {
+            // Only trigger if not clicking on navigation elements
+            if (!e.target.closest('.nav-btn') && !e.target.closest('.slide-counter')) {
+              nextSlide();
+            }
+          });
+        }
+
+        function handleSwipe() {
+          const swipeThreshold = 50;
+          const diff = touchStartX - touchEndX;
+          
+          if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+              // Swipe left - next slide
+              nextSlide();
+            } else {
+              // Swipe right - previous slide
+              prevSlide();
+            }
+          }
+        }
+
+      // Floating Action Button
+      function toggleFab() {
+        const fabOptions = document.querySelector('.fab-options');
+        fabOptions.classList.toggle('active');
+      }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('تم العودة إلى أعلى الصفحة');
+      }
+
+      function shareWebsite() {
+        if (navigator.share) {
+          navigator.share({
+            title: 'المدينة ترحّب',
+            text: 'اكتشف المدينة المنورة مع تطبيقنا الذكي',
+            url: window.location.href
+          });
+        } else {
+          showToast('تم نسخ الرابط إلى الحافظة');
+        }
+      }
+
+      function contactSupport() {
+        showToast('سيتم التواصل معك قريباً');
+      }
+
+      function downloadApp() {
+        showToast('سيتم إطلاق التطبيق قريباً');
+      }
+
+      function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.getElementById('toastContainer').appendChild(toast);
+        
+        setTimeout(() => {
+          toast.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }, 3000);
+      }
+
+      // Add FAB and Toast styles
+      const fabStyle = document.createElement('style');
+      fabStyle.textContent = `
+        .fab-container {
+          position: fixed;
+          bottom: 2rem;
+          right: 2rem;
+          z-index: 1000;
+        }
+
+        .fab-main {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: linear-gradient(45deg, var(--madina-green), var(--madina-dark));
+          border: none;
+          color: white;
+          font-size: 2rem;
+          cursor: pointer;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .fab-main:hover {
+          transform: scale(1.1);
+          box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .fab-options {
+          position: absolute;
+          bottom: 70px;
+          right: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          opacity: 0;
+          pointer-events: none;
+          transition: all 0.3s ease;
+        }
+
+        .fab-options.active {
+          opacity: 1;
+          pointer-events: all;
+        }
+
+        .fab-option {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: var(--madina-gold);
+          border: none;
+          color: var(--madina-dark);
+          font-size: 1.2rem;
+          cursor: pointer;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .fab-option:hover {
+          transform: scale(1.1);
+          background: var(--madina-dark);
+          color: white;
+        }
+
+        .toast-container {
+          position: fixed;
+          top: 2rem;
+          right: 2rem;
+          z-index: 1001;
+        }
+
+        .toast {
+          background: var(--madina-green);
+          color: white;
+          padding: 1rem 2rem;
+          border-radius: 8px;
+          margin-bottom: 1rem;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+          transform: translateX(100%);
+          transition: all 0.3s ease;
+        }
+
+        .toast.show {
+          transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+          .fab-container {
+            bottom: 1rem;
+            right: 1rem;
+          }
+          
+          .fab-main {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+          }
+          
+          .fab-option {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+          }
+        }
+      `;
+      document.head.appendChild(fabStyle);
+
+      // Add FAB HTML
+      const fabHTML = `
+        <div class="fab-container">
+          <button class="fab-main" onclick="toggleFab()">
+            <span class="fab-icon">+</span>
+          </button>
+          <div class="fab-options">
+            <button class="fab-option" onclick="scrollToTop()" title="العودة للأعلى">
+              <span>↑</span>
+            </button>
+            <button class="fab-option" onclick="shareWebsite()" title="مشاركة الموقع">
+              <span>📤</span>
+            </button>
+            <button class="fab-option" onclick="contactSupport()" title="الدعم الفني">
+              <span>💬</span>
+            </button>
+            <button class="fab-option" onclick="downloadApp()" title="تحميل التطبيق">
+              <span>📱</span>
+            </button>
+          </div>
+        </div>
+        <div class="toast-container" id="toastContainer"></div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', fabHTML);
+
+      // Activities Section Functionality
+      function bookActivity(activityName) {
+        showToast(`تم حجز ${activityName} بنجاح! سنتواصل معك قريباً.`);
+        
+        // Simulate booking process
+        setTimeout(() => {
+          showToast('تم إرسال تفاصيل الحجز إلى بريدك الإلكتروني');
+        }, 2000);
+      }
+
+      // Add click event listeners to activity buttons
+      document.addEventListener('DOMContentLoaded', function() {
+        const activityButtons = document.querySelectorAll('.activity-btn');
+        activityButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const activityCard = this.closest('.activity-card');
+            const activityName = activityCard.querySelector('h3').textContent;
+            bookActivity(activityName);
+          });
+        });
+      });
+
+      // Famous Regions Section Functionality
+      function exploreRegion(regionName) {
+        showToast(`جاري تحضير معلومات ${regionName}...`);
+        
+        // Simulate loading region information
+        setTimeout(() => {
+          showToast(`تم تحديث معلومات ${regionName}! اكتشف المزيد من المعالم والأنشطة.`);
+        }, 2000);
+      }
+
+      // Add click event listeners to region buttons
+      document.addEventListener('DOMContentLoaded', function() {
+        const regionButtons = document.querySelectorAll('.region-btn');
+        regionButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const regionCard = this.closest('.region-card');
+            const regionName = regionCard.querySelector('h3').textContent;
+            exploreRegion(regionName);
+          });
+        });
+      });
+
+      // Interactive Map Implementation
+      let interactiveMap;
+      
+      function initializeInteractiveMap() {
+        // Initialize map centered on Medina
+        interactiveMap = L.map('interactive-map').setView([24.4539, 39.6034], 8);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 18
+        }).addTo(interactiveMap);
+        
+        // Define locations with coordinates
+        const locations = [
+          {
+            name: 'المدينة المنورة',
+            coords: [24.4539, 39.6034],
+            icon: '🕌',
+            type: 'madina',
+            description: 'المدينة المنورة - ثاني أقدس مدينة في الإسلام',
+            details: 'موطن المسجد النبوي الشريف والروضة المباركة',
+            distance: ''
+          },
+          {
+            name: 'العلا',
+            coords: [26.6084, 37.9284],
+            icon: '🏛️',
+            type: 'region',
+            description: 'مدينة التاريخ والآثار النبطية',
+            details: 'تضم مدائن صالح وقلعة العلا ومعالم تاريخية تعود لآلاف السنين',
+            distance: '350 كم من المدينة المنورة'
+          },
+          {
+            name: 'ينبع',
+            coords: [24.0896, 38.0618],
+            icon: '🌊',
+            type: 'region',
+            description: 'لؤلؤة البحر الأحمر',
+            details: 'تشتهر بشواطئها الجميلة ومناظرها الطبيعية الخلابة',
+            distance: '220 كم من المدينة المنورة'
+          },
+          {
+            name: 'بدر',
+            coords: [23.7858, 38.7917],
+            icon: '⚔️',
+            type: 'region',
+            description: 'موقع غزوة بدر الكبرى',
+            details: 'المعركة الفاصلة في التاريخ الإسلامي، تضم متحف بدر ومعالم تاريخية مهمة',
+            distance: '150 كم من المدينة المنورة'
+          },
+          {
+            name: 'خيبر',
+            coords: [25.6953, 39.2911],
+            icon: '🏰',
+            type: 'region',
+            description: 'واحة خيبر التاريخية',
+            details: 'موقع فتح خيبر في عهد النبي ﷺ، تشتهر بحصونها القديمة ونخيلها الكثيف',
+            distance: '170 كم من المدينة المنورة'
+          }
+        ];
+        
+        // Add markers for each location
+        locations.forEach(location => {
+          // Create custom icon
+          const customIcon = L.divIcon({
+            html: `<div class="custom-marker ${location.type}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">${location.icon}</div>`,
+            className: 'custom-div-icon',
+            iconSize: [40, 40],
+            iconAnchor: [20, 20],
+            popupAnchor: [0, -20]
+          });
+          
+          // Create popup content
+          const popupContent = `
+            <div class="popup-content">
+              <div class="popup-title">${location.name}</div>
+              <div class="popup-description">${location.details}</div>
+              ${location.distance ? `<div class="popup-distance">${location.distance}</div>` : ''}
+              <button class="popup-button" onclick="exploreLocation('${location.name}')">
+                اكتشف المزيد
+              </button>
+            </div>
+          `;
+          
+          // Add marker to map
+          L.marker(location.coords, { icon: customIcon })
+            .addTo(interactiveMap)
+            .bindPopup(popupContent, {
+              maxWidth: 250,
+              className: 'custom-popup'
+            });
+        });
+        
+        // Add a circle around Medina to show the region
+        L.circle([24.4539, 39.6034], {
+          color: 'var(--madina-green)',
+          fillColor: 'rgba(26, 95, 58, 0.1)',
+          fillOpacity: 0.2,
+          radius: 50000 // 50km radius
+        }).addTo(interactiveMap);
+      }
+      
+      function exploreLocation(locationName) {
+        showToast(`جاري تحضير معلومات ${locationName}...`);
+        
+        // Simulate loading location information
+        setTimeout(() => {
+          showToast(`تم تحديث معلومات ${locationName}! اكتشف المزيد من المعالم والأنشطة.`);
+        }, 1500);
+      }
+      
+      // Initialize map when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        // Add a small delay to ensure the map container is ready
+        setTimeout(() => {
+          if (document.getElementById('interactive-map')) {
+            initializeInteractiveMap();
+          }
+        }, 1000);
+      });
+      
+      // Handle window resize for map responsiveness
+      window.addEventListener('resize', function() {
+        if (interactiveMap) {
+          setTimeout(() => {
+            interactiveMap.invalidateSize();
+          }, 100);
+        }
+      });
+    </script>
+  </body>
+</html>
